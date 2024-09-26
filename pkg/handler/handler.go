@@ -61,7 +61,11 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	item := router.Group("/item")
 	{
-		item.POST("", h.CreateItem)
+		item.POST("/create", h.CreateItem)
+		item.POST("", h.GetItemList)
+		item.GET("", h.GetItemById)
+		item.PUT("", h.UpdateItem)
+		item.POST("/image", h.UploadImage)
 	}
 
 	seller := router.Group("/seller")

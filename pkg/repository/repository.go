@@ -56,6 +56,9 @@ type Item interface {
 	CreateItem(item model.Item) error
 	GetItemById(itemID int) (model.Item, error)
 	UpdateItem(item model.Item) error
+	GetItems(brandIDs, sellerIDs, categoryIDs, materialIDs []uint, minPrice, maxPrice float64) ([]model.Item, error)
+	GetAllItems() ([]model.Item, error)
+	SaveImage(image model.Image) error
 }
 
 type Buyer interface {

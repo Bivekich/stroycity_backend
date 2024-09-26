@@ -1,7 +1,7 @@
 package service
 
 import (
-	"errors"
+	"fmt"
 	"stroycity/pkg/model"
 	"stroycity/pkg/repository"
 )
@@ -22,6 +22,7 @@ func NewOrderService(orderRepo repository.Order, itemRepo repository.Item, selle
 
 func (s *OrderService) CreateOrder(order model.Order) error {
 	total := 0.0
+
 	for _, orderItem := range order.OrderItems {
 		item, err := s.itemRepo.GetItemById(orderItem.ItemID)
 		if err != nil {
@@ -29,7 +30,14 @@ func (s *OrderService) CreateOrder(order model.Order) error {
 		}
 
 		if item.Quantity < orderItem.Quantity {
-			return errors.New("not enough stock for item: " + item.Name)
+			return fmt.Errorf("not enough stock for item: %s", item.Name)
+		}
+	}
+
+	for _, orderItem := range order.OrderItems {
+		item, err := s.itemRepo.GetItemById(orderItem.ItemID)
+		if err != nil {
+			return err
 		}
 
 		orderItem.UnitPrice = item.Price
@@ -53,7 +61,11 @@ func (s *OrderService) CreateOrder(order model.Order) error {
 
 	order.Total = total
 
-	return s.orderRepo.CreateOrder(order)
+	if err := s.orderRepo.CreateOrder(order); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *OrderService) GetOrderById(orderID int) (model.Order, error) {
