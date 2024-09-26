@@ -48,7 +48,7 @@ type CurrentItemInfo struct {
 	Brand             string  `json:"brand"`
 	Seller            string  `json:"seller"`
 	Material          string  `json:"material"`
-	Images            []Image `gorm:"foreignKey:ItemID"`
+	Images            []Image `json:"images" gorm:"foreignKey:ItemID"`
 }
 
 func ConvertItemsToItemInfo(items []Item) []ItemInfo {
