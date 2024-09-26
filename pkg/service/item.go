@@ -43,7 +43,9 @@ func (s *ItemService) GetItemById(itemID int) (model.CurrentItemInfo, error) {
 	currentItemInfo.Brand = item.Brand.Name
 	currentItemInfo.Seller = item.Seller.Name
 	currentItemInfo.Material = item.Material.Name
-	currentItemInfo.Images = item.Images
+	for _, image := range item.Images {
+		currentItemInfo.Images = append(currentItemInfo.Images, image.URL)
+	}
 
 	return currentItemInfo, nil
 }

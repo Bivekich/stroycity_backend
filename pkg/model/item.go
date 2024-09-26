@@ -33,22 +33,22 @@ type ItemInfo struct {
 }
 
 type CurrentItemInfo struct {
-	ID                int     `json:"id"`
-	Name              string  `json:"name"`
-	Description       string  `json:"description"`
-	Article           string  `json:"article"`
-	Price             float64 `json:"price"`
-	PriceWithDiscount float64 `json:"price_with_discount"`
-	Quantity          int     `json:"quantity"`
-	Length            int     `json:"length"`
-	Width             int     `json:"width"`
-	Height            int     `json:"height"`
-	Weight            int     `json:"weight"`
-	Category          string  `json:"category"`
-	Brand             string  `json:"brand"`
-	Seller            string  `json:"seller"`
-	Material          string  `json:"material"`
-	Images            []Image `json:"images" gorm:"foreignKey:ItemID"`
+	ID                int      `json:"id"`
+	Name              string   `json:"name"`
+	Description       string   `json:"description"`
+	Article           string   `json:"article"`
+	Price             float64  `json:"price"`
+	PriceWithDiscount float64  `json:"price_with_discount"`
+	Quantity          int      `json:"quantity"`
+	Length            int      `json:"length"`
+	Width             int      `json:"width"`
+	Height            int      `json:"height"`
+	Weight            int      `json:"weight"`
+	Category          string   `json:"category"`
+	Brand             string   `json:"brand"`
+	Seller            string   `json:"seller"`
+	Material          string   `json:"material"`
+	Images            []string `json:"images"`
 }
 
 func ConvertItemsToItemInfo(items []Item) []ItemInfo {
