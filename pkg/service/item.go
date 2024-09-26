@@ -23,8 +23,30 @@ func (s *ItemService) CreateItem(item model.Item) error {
 	return s.repo.CreateItem(item)
 }
 
-func (s *ItemService) GetItemById(itemID int) (model.Item, error) {
-	return s.repo.GetItemById(itemID)
+func (s *ItemService) GetItemById(itemID int) (model.CurrentItemInfo, error) {
+	currentItemInfo := model.CurrentItemInfo{}
+	item, err := s.repo.GetItemById(itemID)
+	if err != nil {
+		return currentItemInfo, err
+	}
+	currentItemInfo.ID = item.ID
+	currentItemInfo.Name = item.Name
+	currentItemInfo.Description = item.Description
+	currentItemInfo.Article = item.Article
+	currentItemInfo.Price = item.Price
+	currentItemInfo.PriceWithDiscount = item.PriceWithDiscount
+	currentItemInfo.Quantity = item.Quantity
+	currentItemInfo.Length = item.Length
+	currentItemInfo.Width = item.Width
+	currentItemInfo.Height = item.Height
+	currentItemInfo.Weight = item.Weight
+	currentItemInfo.Category = item.Category.Name
+	currentItemInfo.Brand = item.Brand.Name
+	currentItemInfo.Seller = item.Seller.Name
+	currentItemInfo.Material = item.Material.Name
+	currentItemInfo.Images = item.Images
+
+	return currentItemInfo, nil
 }
 
 func (s *ItemService) UpdateItem(item model.Item) error {

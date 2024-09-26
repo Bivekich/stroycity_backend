@@ -32,6 +32,25 @@ type ItemInfo struct {
 	Price       float64 `json:"price"`
 }
 
+type CurrentItemInfo struct {
+	ID                int     `json:"id"`
+	Name              string  `json:"name"`
+	Description       string  `json:"description"`
+	Article           string  `json:"article"`
+	Price             float64 `json:"price"`
+	PriceWithDiscount float64 `json:"price_with_discount"`
+	Quantity          int     `json:"quantity"`
+	Length            int     `json:"length"`
+	Width             int     `json:"width"`
+	Height            int     `json:"height"`
+	Weight            int     `json:"weight"`
+	Category          string  `json:"category"`
+	Brand             string  `json:"brand"`
+	Seller            string  `json:"seller"`
+	Material          string  `json:"material"`
+	Images            []Image `gorm:"foreignKey:ItemID"`
+}
+
 func ConvertItemsToItemInfo(items []Item) []ItemInfo {
 	var itemInfos []ItemInfo
 

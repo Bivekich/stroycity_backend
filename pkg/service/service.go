@@ -55,7 +55,7 @@ type Seller interface {
 
 type Item interface {
 	CreateItem(material model.Item) error
-	GetItemById(itemID int) (model.Item, error)
+	GetItemById(itemID int) (model.CurrentItemInfo, error)
 	UpdateItem(item model.Item) error
 	GetItems(brandIDs, sellerIDs, categoryIDs, materialIDs []uint, minPrice, maxPrice float64) ([]model.ItemInfo, error)
 	GetAllItems() ([]model.ItemInfo, error)
