@@ -19,7 +19,7 @@ func (r *ItemRepository) CreateItem(item model.Item) error {
 
 func (r *ItemRepository) GetItemById(itemID int) (model.Item, error) {
 	var item model.Item
-	if err := r.db.First(&item, itemID).Error; err != nil {
+	if err := r.db.Preload("Brand").Preload("Seller").Preload("Category").Preload("Material").Preload("Images").First(&item, itemID).Error; err != nil {
 		return item, err
 	}
 	return item, nil
