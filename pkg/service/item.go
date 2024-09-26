@@ -2,7 +2,6 @@ package service
 
 import (
 	"fmt"
-	"io"
 	"mime/multipart"
 	"os"
 	"path/filepath"
@@ -100,16 +99,13 @@ func (s *ItemService) UploadImage(itemID int, file multipart.File, fileHeader *m
 		return "", fmt.Errorf("failed to save file: %v", err)
 	}
 
-	return filePath, nil
-}
-
-func (s *ItemService) saveFile(file multipart.File, path string) error {
-	out, err := os.Create(path)
-	if err != nil {
-		return err
+	image := model.Image{
+		ItemID: itemID,
+		URL:    filePath,
 	}
-	defer out.Close()
+	if err := s.repo.SaveImage(image); err != nil {
+		return "", err
+	}
 
-	_, err = io.Copy(out, file)
-	return err
+	return filePath, nil
 }
