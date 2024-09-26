@@ -72,20 +72,32 @@ func (s *ItemService) GetAllItems() ([]model.ItemInfo, error) {
 }
 
 func (s *ItemService) UploadImage(itemID int, file multipart.File, fileHeader *multipart.FileHeader) (string, error) {
-	ext := filepath.Ext(fileHeader.Filename)
-	fileName := fmt.Sprintf("%d_%d%s", itemID, time.Now().Unix(), ext)
-	filePath := fmt.Sprintf("uploads/%s", fileName)
+	uploadDir := "uploads"
 
-	if err := s.saveFile(file, filePath); err != nil {
-		return "", err
+	if _, err := os.Stat(uploadDir); os.IsNotExist(err) {
+		err = os.MkdirAll(uploadDir, os.ModePerm)
+		if err != nil {
+			return "", fmt.Errorf("failed to create directory: %v", err)
+		}
 	}
 
-	image := model.Image{
-		ItemID: itemID,
-		URL:    filePath,
+	fileName := fmt.Sprintf("%d_%d%s", itemID, time.Now().Unix(), filepath.Ext(fileHeader.Filename))
+	filePath := filepath.Join(uploadDir, fileName)
+
+	file, err := fileHeader.Open()
+	if err != nil {
+		return "", fmt.Errorf("failed to open file: %v", err)
 	}
-	if err := s.repo.SaveImage(image); err != nil {
-		return "", err
+	defer file.Close()
+
+	dst, err := os.Create(filePath)
+	if err != nil {
+		return "", fmt.Errorf("failed to create file: %v", err)
+	}
+	defer dst.Close()
+
+	if _, err := dst.ReadFrom(file); err != nil {
+		return "", fmt.Errorf("failed to save file: %v", err)
 	}
 
 	return filePath, nil
