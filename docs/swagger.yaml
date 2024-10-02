@@ -1,0 +1,1080 @@
+definitions:
+  handler.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  handler.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  handler.TokenResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  model.Admin:
+    properties:
+      id:
+        type: string
+      login:
+        type: string
+      password:
+        type: string
+    type: object
+  model.AdminLoginRequest:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    type: object
+  model.Brand:
+    properties:
+      id:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/model.Item'
+        type: array
+      name:
+        type: string
+    type: object
+  model.Buyer:
+    properties:
+      email:
+        type: string
+      favorites:
+        items:
+          $ref: '#/definitions/model.Item'
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      orders:
+        items:
+          $ref: '#/definitions/model.Order'
+        type: array
+      password:
+        type: string
+    type: object
+  model.BuyerOutput:
+    properties:
+      email:
+        type: string
+      favorites:
+        items:
+          $ref: '#/definitions/model.ItemInfo'
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      orders:
+        items:
+          $ref: '#/definitions/model.Order'
+        type: array
+    type: object
+  model.Category:
+    properties:
+      id:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/model.Item'
+        type: array
+      name:
+        type: string
+    type: object
+  model.CurrentItemInfo:
+    properties:
+      article:
+        type: string
+      brand:
+        type: string
+      category:
+        type: string
+      description:
+        type: string
+      height:
+        type: integer
+      id:
+        type: integer
+      images:
+        items:
+          type: string
+        type: array
+      length:
+        type: integer
+      material:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      price_with_discount:
+        type: number
+      quantity:
+        type: integer
+      seller:
+        type: string
+      seller_id:
+        type: string
+      weight:
+        type: integer
+      width:
+        type: integer
+    type: object
+  model.FilterRequest:
+    properties:
+      brands:
+        items:
+          type: integer
+        type: array
+      categories:
+        items:
+          type: integer
+        type: array
+      materials:
+        items:
+          type: integer
+        type: array
+      max_price:
+        type: number
+      min_price:
+        type: number
+      sellers:
+        items:
+          type: integer
+        type: array
+    type: object
+  model.Image:
+    properties:
+      id:
+        type: integer
+      item:
+        $ref: '#/definitions/model.Item'
+      item_id:
+        type: integer
+      url:
+        type: string
+    type: object
+  model.Item:
+    properties:
+      article:
+        type: string
+      brand:
+        $ref: '#/definitions/model.Brand'
+      brand_id:
+        type: integer
+      category:
+        $ref: '#/definitions/model.Category'
+      category_id:
+        type: integer
+      description:
+        type: string
+      favoritedBy:
+        items:
+          $ref: '#/definitions/model.Buyer'
+        type: array
+      height:
+        type: integer
+      id:
+        type: integer
+      images:
+        items:
+          $ref: '#/definitions/model.Image'
+        type: array
+      length:
+        type: integer
+      material:
+        $ref: '#/definitions/model.Material'
+      material_id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+      price_with_discount:
+        type: number
+      quantity:
+        type: integer
+      seller:
+        $ref: '#/definitions/model.Seller'
+      seller_id:
+        type: string
+      weight:
+        type: integer
+      width:
+        type: integer
+    type: object
+  model.ItemInfo:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  model.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  model.Material:
+    properties:
+      id:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/model.Item'
+        type: array
+      name:
+        type: string
+    type: object
+  model.Order:
+    properties:
+      buyer:
+        $ref: '#/definitions/model.Buyer'
+      buyer_id:
+        type: string
+      id:
+        type: integer
+      order_items:
+        items:
+          $ref: '#/definitions/model.OrderItem'
+        type: array
+      status:
+        type: string
+      total:
+        type: number
+    type: object
+  model.OrderItem:
+    properties:
+      id:
+        type: integer
+      item:
+        $ref: '#/definitions/model.Item'
+      item_id:
+        type: integer
+      order:
+        $ref: '#/definitions/model.Order'
+      order_id:
+        type: integer
+      quantity:
+        type: integer
+      total:
+        type: number
+      unit_price:
+        type: number
+    type: object
+  model.Seller:
+    properties:
+      balance:
+        type: number
+      email:
+        type: string
+      id:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/model.Item'
+        type: array
+      name:
+        type: string
+      password:
+        type: string
+      shop_name:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /admin/brand:
+    delete:
+      description: Deletes a brand by ID. Only accessible by admin.
+      parameters:
+      - description: Brand ID
+        in: query
+        name: brand_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Brand deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid brand ID
+          schema:
+            type: string
+        "401":
+          description: You are not authorized to access this resource
+          schema:
+            type: string
+        "500":
+          description: Failed to delete brand
+          schema:
+            type: string
+      summary: Delete a brand
+      tags:
+      - brands
+    post:
+      consumes:
+      - application/json
+      description: Creates a new brand with the provided details. Only accessible
+        by admin.
+      parameters:
+      - description: Brand data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Brand'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Brand created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid input data
+          schema:
+            type: string
+        "401":
+          description: You are not authorized to access this resource
+          schema:
+            type: string
+        "500":
+          description: Failed to create brand
+          schema:
+            type: string
+      summary: Create a new brand
+      tags:
+      - brands
+  /admin/category:
+    delete:
+      description: Delete a category by ID
+      parameters:
+      - description: Category ID
+        in: query
+        name: category_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Category deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid category ID
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to delete category
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Delete a category
+      tags:
+      - Categories
+    post:
+      consumes:
+      - application/json
+      description: Create a new category in the system
+      parameters:
+      - description: Category data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Category created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid input data
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to create category
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Create a new category
+      tags:
+      - Categories
+  /admin/material:
+    delete:
+      description: Delete a material from the system by its ID
+      parameters:
+      - description: Material ID
+        in: query
+        name: material_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Material deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid material ID
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to delete material
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Delete a material by ID
+      tags:
+      - Materials
+    post:
+      consumes:
+      - application/json
+      description: Create a new material in the system
+      parameters:
+      - description: Material data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Material'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Material created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid input data
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to create material
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Create a new material
+      tags:
+      - Materials
+  /admin/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Registers a new admin user
+      parameters:
+      - description: Admin signup data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Admin'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Admin signed up successfully
+          schema:
+            $ref: '#/definitions/handler.SuccessResponse'
+        "400":
+          description: Invalid input data
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to sign up
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Sign up as an admin
+      tags:
+      - admin
+  /brand:
+    get:
+      description: Retrieves a list of all brands. Only accessible by admin.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of brands
+          schema:
+            items:
+              $ref: '#/definitions/model.Brand'
+            type: array
+        "401":
+          description: You are not authorized to access this resource
+          schema:
+            type: string
+        "500":
+          description: Failed to get brand list
+          schema:
+            type: string
+      summary: Get list of brands
+      tags:
+      - brands
+  /buyer:
+    get:
+      description: Retrieve buyer information by ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Buyer data
+          schema:
+            $ref: '#/definitions/model.BuyerOutput'
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Buyer not found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get buyer information
+      tags:
+      - Buyers
+    patch:
+      consumes:
+      - application/json
+      description: Update buyer details
+      parameters:
+      - description: Buyer data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Buyer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Buyer updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid input data
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to update buyer
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Update buyer information
+      tags:
+      - Buyers
+  /buyer/order:
+    get:
+      description: Retrieve an order by its ID for the buyer
+      parameters:
+      - description: Order ID
+        in: path
+        name: order_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order data
+          schema:
+            $ref: '#/definitions/model.Order'
+        "400":
+          description: Invalid order ID
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Order not found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get an order by ID
+      tags:
+      - Orders
+    post:
+      consumes:
+      - application/json
+      description: Create a new order for the buyer
+      parameters:
+      - description: Order data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Order'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Order created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid input data
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to create order
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Create a new order
+      tags:
+      - Orders
+  /category:
+    get:
+      description: Retrieve a list of all categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of categories
+          schema:
+            items:
+              $ref: '#/definitions/model.Category'
+            type: array
+        "500":
+          description: Failed to retrieve category list
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get category list
+      tags:
+      - Categories
+  /item:
+    get:
+      description: Retrieve an item by its ID
+      parameters:
+      - description: Item ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Item details
+          schema:
+            $ref: '#/definitions/model.CurrentItemInfo'
+        "400":
+          description: Invalid item ID
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Item not found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get item by ID
+      tags:
+      - Items
+    post:
+      consumes:
+      - application/json
+      description: Retrieve a list of items, optionally filtered
+      parameters:
+      - description: Filter criteria
+        in: body
+        name: filters
+        required: true
+        schema:
+          $ref: '#/definitions/model.FilterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of items
+          schema:
+            items:
+              $ref: '#/definitions/model.ItemInfo'
+            type: array
+        "500":
+          description: Failed to get items
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get item list
+      tags:
+      - Items
+  /material:
+    get:
+      description: Retrieve a list of materials from the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of materials
+          schema:
+            items:
+              $ref: '#/definitions/model.Material'
+            type: array
+        "500":
+          description: Failed to retrieve material list
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get material list
+      tags:
+      - Materials
+  /seller:
+    get:
+      description: Retrieve seller details by ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Seller data
+          schema:
+            $ref: '#/definitions/model.Seller'
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to retrieve seller
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get seller information
+      tags:
+      - Sellers
+    patch:
+      consumes:
+      - application/json
+      description: Update the details of the seller
+      parameters:
+      - description: Updated seller data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Seller'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Seller updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid input data
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to update seller
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Update seller information
+      tags:
+      - Sellers
+  /seller/item:
+    patch:
+      consumes:
+      - application/json
+      description: Update an item by its ID
+      parameters:
+      - description: Item ID
+        in: query
+        name: id
+        required: true
+        type: string
+      - description: Item data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Item'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Item updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid input data
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Item not found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to update item
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Update an existing item
+      tags:
+      - Items
+    post:
+      consumes:
+      - application/json
+      description: Create a new item in the system
+      parameters:
+      - description: Item data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Item'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Item created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid input data
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to create item
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Create a new item
+      tags:
+      - Items
+  /seller/item/image:
+    post:
+      description: Upload an image for a specific item by ID
+      parameters:
+      - description: Item ID
+        in: query
+        name: item_id
+        required: true
+        type: string
+      - description: Image file
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'url": "url'
+          schema:
+            $ref: '#/definitions/handler.SuccessResponse'
+        "400":
+          description: Invalid item ID or failed to upload image
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Item not found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to save image
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Upload an image for an item
+      tags:
+      - Items
+  /sign-in/admin:
+    post:
+      consumes:
+      - application/json
+      description: Logs in an admin user
+      parameters:
+      - description: Admin login data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.AdminLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Authentication token
+          schema:
+            $ref: '#/definitions/handler.TokenResponse'
+        "400":
+          description: Invalid login data
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: Invalid credentials
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Sign in as an admin
+      tags:
+      - admin
+  /sign-in/buyer:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a buyer with email and password
+      parameters:
+      - description: Login data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Authenticated buyer data
+          schema:
+            $ref: '#/definitions/model.BuyerOutput'
+        "400":
+          description: Invalid login data
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: Invalid credentials
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Buyer login
+      tags:
+      - Buyers
+  /sign-in/seller:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a seller with their email and password
+      parameters:
+      - description: Login credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Seller data
+          schema:
+            $ref: '#/definitions/model.Seller'
+        "400":
+          description: Invalid input data
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Seller sign in
+      tags:
+      - Sellers
+  /sign-up/buyer:
+    post:
+      consumes:
+      - application/json
+      description: Register a new buyer in the system
+      parameters:
+      - description: Buyer data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Buyer'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Buyer signed up successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid input data
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to sign up
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Create a new buyer
+      tags:
+      - Buyers
+  /sign-up/seller:
+    post:
+      consumes:
+      - application/json
+      description: Register a new seller with the provided details
+      parameters:
+      - description: Seller data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Seller'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Seller registered successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid input data
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to register seller
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Register a new seller
+      tags:
+      - Sellers
+swagger: "2.0"

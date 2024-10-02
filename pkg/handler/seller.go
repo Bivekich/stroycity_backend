@@ -6,6 +6,17 @@ import (
 	"stroycity/pkg/model"
 )
 
+// SellerSignUp регистрирует нового продавца
+// @Summary Register a new seller
+// @Description Register a new seller with the provided details
+// @Tags Sellers
+// @Accept json
+// @Produce json
+// @Param input body model.Seller true "Seller data"
+// @Success 201 {string} string "Seller registered successfully"
+// @Failure 400 {object} ErrorResponse "Invalid input data"
+// @Failure 500 {object} ErrorResponse "Failed to register seller"
+// @Router /sign-up/seller [post]
 func (h *Handler) SellerSignUp(c *gin.Context) {
 	var input model.Seller
 
@@ -25,6 +36,15 @@ func (h *Handler) SellerSignUp(c *gin.Context) {
 	c.JSON(http.StatusCreated, "Seller registered successfully")
 }
 
+// GetSeller возвращает информацию о продавце
+// @Summary Get seller information
+// @Description Retrieve seller details by ID
+// @Tags Sellers
+// @Produce json
+// @Success 200 {object} model.Seller "Seller data"
+// @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"
+// @Failure 500 {object} ErrorResponse "Failed to retrieve seller"
+// @Router /seller [get]
 func (h *Handler) GetSeller(c *gin.Context) {
 	sellerID := c.GetString("user_id")
 
@@ -45,6 +65,18 @@ func (h *Handler) GetSeller(c *gin.Context) {
 	c.JSON(http.StatusOK, seller)
 }
 
+// UpdateSeller обновляет информацию о продавце
+// @Summary Update seller information
+// @Description Update the details of the seller
+// @Tags Sellers
+// @Accept json
+// @Produce json
+// @Param input body model.Seller true "Updated seller data"
+// @Success 200 {string} string "Seller updated successfully"
+// @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"
+// @Failure 400 {object} ErrorResponse "Invalid input data"
+// @Failure 500 {object} ErrorResponse "Failed to update seller"
+// @Router /seller [patch]
 func (h *Handler) UpdateSeller(c *gin.Context) {
 	sellerID := c.GetString("user_id")
 
@@ -74,6 +106,17 @@ func (h *Handler) UpdateSeller(c *gin.Context) {
 	c.JSON(http.StatusOK, "Seller updated successfully")
 }
 
+// SellerSignIn аутентифицирует продавца
+// @Summary Seller sign in
+// @Description Authenticate a seller with their email and password
+// @Tags Sellers
+// @Accept json
+// @Produce json
+// @Param input body model.LoginRequest true "Login credentials"
+// @Success 200 {object} model.Seller "Seller data"
+// @Failure 400 {object} ErrorResponse "Invalid input data"
+// @Failure 401 {object} ErrorResponse "Unauthorized"
+// @Router /sign-in/seller [post]
 func (h *Handler) SellerSignIn(c *gin.Context) {
 	var input model.LoginRequest
 

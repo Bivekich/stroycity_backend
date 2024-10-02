@@ -3,6 +3,8 @@ package handler
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"stroycity/pkg/service"
 )
 
@@ -26,6 +28,11 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		AllowCredentials: true,
 	}))
 
+	//SWAGGER
+	////////////////////////////////////////////////////////////
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	////////////////////////////////////////////////////////////
+
 	// EVERYONE
 	////////////////////////////////////////////////////////////
 	router.GET("/category", h.GetCategoryList)
@@ -41,7 +48,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	//SIGN UP
 	////////////////////////////////////////////////////////////
-	signUp := router.Group("/sign_up")
+	signUp := router.Group("/sign-up")
 	{
 		signUp.POST("/seller", h.SellerSignUp)
 		signUp.POST("/buyer", h.BuyerSignUp)
@@ -50,7 +57,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	//SIGN IN
 	////////////////////////////////////////////////////////////
-	signIn := router.Group("/sign_in")
+	signIn := router.Group("/sign-in")
 	{
 		signIn.POST("/seller", h.SellerSignIn)
 		signIn.POST("/buyer", h.BuyerSignIn)
@@ -62,7 +69,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	////////////////////////////////////////////////////////////
 	admin := router.Group("/admin", h.UserIdentity)
 	{
-		admin.POST("/sign-ip", h.AdminSignUp)
+		admin.POST("/sign-up", h.AdminSignUp)
 
 		category := admin.Group("/category")
 		{

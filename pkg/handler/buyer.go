@@ -6,6 +6,17 @@ import (
 	"stroycity/pkg/model"
 )
 
+// BuyerSignUp создаёт нового покупателя
+// @Summary Create a new buyer
+// @Description Register a new buyer in the system
+// @Tags Buyers
+// @Accept json
+// @Produce json
+// @Param input body model.Buyer true "Buyer data"
+// @Success 201 {string} string "Buyer signed up successfully"
+// @Failure 400 {object} ErrorResponse "Invalid input data"
+// @Failure 500 {object} ErrorResponse "Failed to sign up"
+// @Router /sign-up/buyer [post]
 func (h *Handler) BuyerSignUp(c *gin.Context) {
 	var input model.Buyer
 
@@ -24,6 +35,15 @@ func (h *Handler) BuyerSignUp(c *gin.Context) {
 	c.JSON(http.StatusCreated, "Buyer signed up successfully") // 201 Created
 }
 
+// GetBuyer возвращает информацию о покупателе
+// @Summary Get buyer information
+// @Description Retrieve buyer information by ID
+// @Tags Buyers
+// @Produce json
+// @Success 200 {object} model.BuyerOutput "Buyer data"
+// @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"
+// @Failure 404 {object} ErrorResponse "Buyer not found"
+// @Router /buyer [get]
 func (h *Handler) GetBuyer(c *gin.Context) {
 	id := c.GetString("user_id")
 
@@ -42,6 +62,18 @@ func (h *Handler) GetBuyer(c *gin.Context) {
 	c.JSON(http.StatusOK, buyer) // 200 OK
 }
 
+// UpdateBuyer обновляет информацию о покупателе
+// @Summary Update buyer information
+// @Description Update buyer details
+// @Tags Buyers
+// @Accept json
+// @Produce json
+// @Param input body model.Buyer true "Buyer data"
+// @Success 200 {string} string "Buyer updated successfully"
+// @Failure 400 {object} ErrorResponse "Invalid input data"
+// @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"
+// @Failure 500 {object} ErrorResponse "Failed to update buyer"
+// @Router /buyer [patch]
 func (h *Handler) UpdateBuyer(c *gin.Context) {
 	id := c.GetString("user_id")
 
@@ -66,6 +98,17 @@ func (h *Handler) UpdateBuyer(c *gin.Context) {
 	c.JSON(http.StatusOK, "Buyer updated successfully") // 200 OK
 }
 
+// BuyerSignIn аутентифицирует покупателя
+// @Summary Buyer login
+// @Description Authenticate a buyer with email and password
+// @Tags Buyers
+// @Accept json
+// @Produce json
+// @Param input body model.LoginRequest true "Login data"
+// @Success 200 {object} model.BuyerOutput "Authenticated buyer data"
+// @Failure 400 {object} ErrorResponse "Invalid login data"
+// @Failure 401 {object} ErrorResponse "Invalid credentials"
+// @Router /sign-in/buyer [post]
 func (h *Handler) BuyerSignIn(c *gin.Context) {
 	var input model.LoginRequest
 

@@ -7,6 +7,18 @@ import (
 	"stroycity/pkg/model"
 )
 
+// CreateOrder создает новый заказ
+// @Summary Create a new order
+// @Description Create a new order for the buyer
+// @Tags Orders
+// @Accept json
+// @Produce json
+// @Param input body model.Order true "Order data"
+// @Success 201 {string} string "Order created successfully"
+// @Failure 400 {object} ErrorResponse "Invalid input data"
+// @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"
+// @Failure 500 {object} ErrorResponse "Failed to create order"
+// @Router /buyer/order [post]
 func (h *Handler) CreateOrder(c *gin.Context) {
 	// Получение ID пользователя
 	buyerID := c.GetString("user_id")
@@ -37,6 +49,17 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 	c.JSON(http.StatusCreated, "Order created successfully") // 201 Created после успешного создания заказа
 }
 
+// GetOrder возвращает заказ по ID
+// @Summary Get an order by ID
+// @Description Retrieve an order by its ID for the buyer
+// @Tags Orders
+// @Produce json
+// @Param order_id path int true "Order ID"
+// @Success 200 {object} model.Order "Order data"
+// @Failure 400 {object} ErrorResponse "Invalid order ID"
+// @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"
+// @Failure 404 {object} ErrorResponse "Order not found"
+// @Router /buyer/order [get]
 func (h *Handler) GetOrder(c *gin.Context) {
 	// Получение ID пользователя
 	buyerID := c.GetString("user_id")
