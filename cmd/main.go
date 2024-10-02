@@ -36,7 +36,7 @@ func main() {
 	handlers := handler.NewHandler(services)
 
 	srv := new(stroycity.Server)
-	if err := srv.Run(os.Getenv("8080"), handlers.InitRoutes()); err != nil {
+	if err := srv.Run(os.Getenv("PORT"), handlers.InitRoutes()); err != nil {
 		logrus.Fatalf("error occured while running server %s", err.Error())
 	}
 }
