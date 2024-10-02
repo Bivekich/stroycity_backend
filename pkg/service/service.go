@@ -14,6 +14,7 @@ type Service struct {
 	Item
 	Buyer
 	Order
+	Admin
 }
 
 func NewService(repos *repository.Repository) *Service {
@@ -25,6 +26,7 @@ func NewService(repos *repository.Repository) *Service {
 		Item:     NewItemService(repos.Item),
 		Buyer:    NewBuyerService(repos.Buyer),
 		Order:    NewOrderService(repos.Order, repos.Item, repos.Seller),
+		Admin:    NewAdminService(repos.Admin),
 	}
 }
 
@@ -72,4 +74,9 @@ type Buyer interface {
 type Order interface {
 	CreateOrder(order model.Order) error
 	GetOrderById(orderID int) (model.Order, error)
+}
+
+type Admin interface {
+	AdminSignUp(admin model.Admin) error
+	AdminSignIn(login, password string) (string, error)
 }

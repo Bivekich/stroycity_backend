@@ -47,6 +47,7 @@ type CurrentItemInfo struct {
 	Category          string   `json:"category"`
 	Brand             string   `json:"brand"`
 	Seller            string   `json:"seller"`
+	SellerID          string   `json:"seller_id"`
 	Material          string   `json:"material"`
 	Images            []string `json:"images"`
 }

@@ -53,7 +53,7 @@ func (s *SellerService) SellerSignIn(mail, password string) (model.SellerSignInR
 		return model.SellerSignInResponse{}, err
 	}
 
-	token := CreateToken(seller.ID)
+	token := CreateToken(seller.ID, "seller")
 
 	items := model.ConvertItemsToItemInfo(seller.Items)
 

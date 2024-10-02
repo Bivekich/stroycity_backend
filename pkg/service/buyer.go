@@ -53,7 +53,7 @@ func (s *BuyerService) BuyerSignIn(mail, password string) (model.BuyerSignInResp
 		return model.BuyerSignInResponse{}, err
 	}
 
-	token := CreateToken(buyer.ID)
+	token := CreateToken(buyer.ID, "buyer")
 
 	signInResponse.Token = token
 	favorites := model.ConvertItemsToItemInfo(buyer.Favorites)

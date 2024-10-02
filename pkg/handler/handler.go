@@ -26,65 +26,96 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		AllowCredentials: true,
 	}))
 
-	category := router.Group("/category")
-	{
-		category.POST("", h.CreateCategory)
-		category.GET("", h.GetCategoryList)
-		category.DELETE("", h.DeleteCategory)
-	}
+	// EVERYONE
+	////////////////////////////////////////////////////////////
+	router.GET("/category", h.GetCategoryList)
+	router.GET("/brand", h.GetBrandList)
+	router.GET("/material", h.GetMaterialList)
 
-	brand := router.Group("/brand")
+	item := router.Group("/item")
 	{
-		brand.POST("", h.CreateBrand)
-		brand.GET("", h.GetBrandList)
-		brand.DELETE("", h.DeleteBrand)
+		item.POST("", h.GetItemList)
+		item.GET("", h.GetItemById)
 	}
+	////////////////////////////////////////////////////////////
 
-	material := router.Group("/material")
-	{
-		material.POST("", h.CreateMaterial)
-		material.GET("", h.GetMaterialList)
-		material.DELETE("", h.DeleteMaterial)
-	}
-
+	//SIGN UP
+	////////////////////////////////////////////////////////////
 	signUp := router.Group("/sign_up")
 	{
 		signUp.POST("/seller", h.SellerSignUp)
 		signUp.POST("/buyer", h.BuyerSignUp)
 	}
+	////////////////////////////////////////////////////////////
 
+	//SIGN IN
+	////////////////////////////////////////////////////////////
 	signIn := router.Group("/sign_in")
 	{
 		signIn.POST("/seller", h.SellerSignIn)
 		signIn.POST("/buyer", h.BuyerSignIn)
+		signIn.POST("/admin", h.AdminSignIn)
 	}
+	////////////////////////////////////////////////////////////
 
-	item := router.Group("/item")
+	//ADMIN
+	////////////////////////////////////////////////////////////
+	admin := router.Group("/admin", h.UserIdentity)
 	{
-		item.POST("/create", h.CreateItem)
-		item.POST("", h.GetItemList)
-		item.GET("", h.GetItemById)
-		item.PUT("", h.UpdateItem)
-		item.POST("/image", h.UploadImage)
-	}
+		admin.POST("/sign-ip", h.AdminSignUp)
 
-	seller := router.Group("/seller")
+		category := admin.Group("/category")
+		{
+			category.POST("", h.CreateCategory)
+			category.DELETE("", h.DeleteCategory)
+		}
+
+		brand := admin.Group("/brand")
+		{
+			brand.POST("", h.CreateBrand)
+			brand.DELETE("", h.DeleteBrand)
+		}
+
+		material := admin.Group("/material")
+		{
+			material.POST("", h.CreateMaterial)
+			material.DELETE("", h.DeleteMaterial)
+		}
+	}
+	////////////////////////////////////////////////////////////
+
+	//SELLER
+	////////////////////////////////////////////////////////////
+	seller := router.Group("/seller", h.UserIdentity)
 	{
 		seller.GET("", h.GetSeller)
 		seller.PATCH("", h.UpdateSeller)
-	}
 
-	buyer := router.Group("/buyer")
+		sellerItem := seller.Group("/item")
+		{
+			sellerItem.POST("", h.CreateItem)
+			sellerItem.PUT("", h.UpdateItem)
+			sellerItem.POST("/image", h.UploadImage)
+		}
+
+	}
+	////////////////////////////////////////////////////////////
+
+	//BUYER
+	////////////////////////////////////////////////////////////
+	buyer := router.Group("/buyer", h.UserIdentity)
 	{
 		buyer.GET("", h.GetBuyer)
 		buyer.PATCH("", h.UpdateBuyer)
-	}
 
-	order := router.Group("/order")
-	{
-		order.GET("", h.GetOrder)
-		order.POST("", h.CreateOrder)
+		order := buyer.Group("/order")
+		{
+			order.GET("", h.GetOrder)
+			order.POST("", h.CreateOrder)
+		}
+
 	}
+	////////////////////////////////////////////////////////////
 
 	return router
 }

@@ -13,6 +13,7 @@ type Repository struct {
 	Item
 	Buyer
 	Order
+	Admin
 }
 
 func NewRepository(db *gorm.DB) *Repository {
@@ -24,6 +25,7 @@ func NewRepository(db *gorm.DB) *Repository {
 		Item:     NewItemRepository(db),
 		Buyer:    NewBuyerRepository(db),
 		Order:    NewOrderRepository(db),
+		Admin:    NewAdminRepository(db),
 	}
 }
 
@@ -71,4 +73,9 @@ type Buyer interface {
 type Order interface {
 	CreateOrder(order model.Order) error
 	GetOrderById(orderID int) (model.Order, error)
+}
+
+type Admin interface {
+	AdminSignUp(admin model.Admin) error
+	AdminSignIn(login, password string) (model.Admin, error)
 }
