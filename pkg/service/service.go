@@ -15,6 +15,7 @@ type Service struct {
 	Buyer
 	Order
 	Admin
+	Cart
 }
 
 func NewService(repos *repository.Repository) *Service {
@@ -25,27 +26,28 @@ func NewService(repos *repository.Repository) *Service {
 		Seller:   NewSellerService(repos.Seller),
 		Item:     NewItemService(repos.Item),
 		Buyer:    NewBuyerService(repos.Buyer),
-		Order:    NewOrderService(repos.Order, repos.Item, repos.Seller),
+		Order:    NewOrderService(repos.Order, repos.Item, repos.Seller, repos.Cart),
 		Admin:    NewAdminService(repos.Admin),
+		Cart:     NewCartService(repos.Cart),
 	}
 }
 
 type Category interface {
 	CreateCategory(category model.Category) error
 	DeleteCategory(id int) error
-	GetCategoryList() ([]model.Category, error)
+	GetCategoryList() ([]model.CategoryOutput, error)
 }
 
 type Brand interface {
 	CreateBrand(Brand model.Brand) error
 	DeleteBrand(id int) error
-	GetBrandList() ([]model.Brand, error)
+	GetBrandList() ([]model.BrandOutput, error)
 }
 
 type Material interface {
 	CreateMaterial(material model.Material) error
 	DeleteMaterial(id int) error
-	GetMaterialList() ([]model.Material, error)
+	GetMaterialList() ([]model.MaterialOutput, error)
 }
 
 type Seller interface {
@@ -72,11 +74,19 @@ type Buyer interface {
 }
 
 type Order interface {
-	CreateOrder(order model.Order) error
+	CreateOrder(buyerID string) error
 	GetOrderById(orderID int) (model.Order, error)
+	ClearCart(buyerID string) error
 }
 
 type Admin interface {
 	AdminSignUp(admin model.Admin) error
 	AdminSignIn(login, password string) (string, error)
+}
+
+type Cart interface {
+	AddToCart(buyerID string, itemID int, quantity int) error
+	GetCart(buyerID string) (model.Cart, error)
+	UpdateCartItem(cartItemID int, quantity int) error
+	RemoveFromCart(cartItemID int) error
 }

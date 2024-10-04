@@ -41,6 +41,7 @@ func (h *Handler) SellerSignUp(c *gin.Context) {
 // @Description Retrieve seller details by ID
 // @Tags Sellers
 // @Produce json
+// @Param Authorization header string true "Bearer {JWT}"
 // @Success 200 {object} model.Seller "Seller data"
 // @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"
 // @Failure 500 {object} ErrorResponse "Failed to retrieve seller"
@@ -71,6 +72,7 @@ func (h *Handler) GetSeller(c *gin.Context) {
 // @Tags Sellers
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "Bearer {JWT}"
 // @Param input body model.Seller true "Updated seller data"
 // @Success 200 {string} string "Seller updated successfully"
 // @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"

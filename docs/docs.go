@@ -30,12 +30,19 @@ const docTemplate = `{
                 "summary": "Create a new brand",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Brand data",
                         "name": "input",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Brand"
+                            "$ref": "#/definitions/model.BrandInput"
                         }
                     }
                 ],
@@ -76,6 +83,13 @@ const docTemplate = `{
                 ],
                 "summary": "Delete a brand",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "integer",
                         "description": "Brand ID",
@@ -127,12 +141,19 @@ const docTemplate = `{
                 "summary": "Create a new category",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Category data",
                         "name": "input",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Category"
+                            "$ref": "#/definitions/model.CategoryInput"
                         }
                     }
                 ],
@@ -173,6 +194,13 @@ const docTemplate = `{
                 ],
                 "summary": "Delete a category",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Category ID",
@@ -224,12 +252,19 @@ const docTemplate = `{
                 "summary": "Create a new material",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Material data",
                         "name": "input",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Material"
+                            "$ref": "#/definitions/model.MaterialInput"
                         }
                     }
                 ],
@@ -270,6 +305,13 @@ const docTemplate = `{
                 ],
                 "summary": "Delete a material by ID",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Material ID",
@@ -320,6 +362,13 @@ const docTemplate = `{
                 ],
                 "summary": "Sign up as an admin",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "Admin signup data",
                         "name": "input",
@@ -374,7 +423,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Brand"
+                                "$ref": "#/definitions/model.BrandOutput"
                             }
                         }
                     },
@@ -403,6 +452,15 @@ const docTemplate = `{
                     "Buyers"
                 ],
                 "summary": "Get buyer information",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Buyer data",
@@ -437,6 +495,13 @@ const docTemplate = `{
                 ],
                 "summary": "Update buyer information",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "Buyer data",
                         "name": "input",
@@ -487,10 +552,17 @@ const docTemplate = `{
                 "summary": "Get an order by ID",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "type": "integer",
                         "description": "Order ID",
                         "name": "order_id",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     }
                 ],
@@ -518,14 +590,17 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/handler.ErrorResponse"
                         }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
                     }
                 }
             },
             "post": {
-                "description": "Create a new order for the buyer",
-                "consumes": [
-                    "application/json"
-                ],
+                "description": "Create an order from the items in the cart of the current buyer",
                 "produces": [
                     "application/json"
                 ],
@@ -535,24 +610,22 @@ const docTemplate = `{
                 "summary": "Create a new order",
                 "parameters": [
                     {
-                        "description": "Order data",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.Order"
-                        }
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Order created successfully",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handler.SuccessResponse"
                         }
                     },
                     "400": {
-                        "description": "Invalid input data",
+                        "description": "Cart is empty",
                         "schema": {
                             "$ref": "#/definitions/handler.ErrorResponse"
                         }
@@ -564,9 +637,143 @@ const docTemplate = `{
                         }
                     },
                     "500": {
-                        "description": "Failed to create order",
+                        "description": "Internal server error",
                         "schema": {
                             "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/cart": {
+            "get": {
+                "description": "Retrieves the contents of the buyer's cart. Only accessible by buyers.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cart"
+                ],
+                "summary": "Get cart contents",
+                "responses": {
+                    "200": {
+                        "description": "Cart items",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.CartItem"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to access this resource",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/cart/add": {
+            "post": {
+                "description": "Adds a specified item with a specified quantity to the buyer's cart. Only accessible by buyers.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cart"
+                ],
+                "summary": "Add an item to cart",
+                "parameters": [
+                    {
+                        "description": "Item ID and Quantity",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.AddToCartInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Item added to cart",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to access this resource",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/cart/remove": {
+            "delete": {
+                "description": "Removes a specified item from the buyer's cart by cart item ID. Only accessible by buyers.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cart"
+                ],
+                "summary": "Remove an item from the cart",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Cart Item ID",
+                        "name": "cart_item_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Item removed from cart",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid cart item ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to access this resource",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -588,7 +795,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Category"
+                                "$ref": "#/definitions/model.CategoryOutput"
                             }
                         }
                     },
@@ -699,7 +906,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Material"
+                                "$ref": "#/definitions/model.MaterialOutput"
                             }
                         }
                     },
@@ -722,6 +929,15 @@ const docTemplate = `{
                     "Sellers"
                 ],
                 "summary": "Get seller information",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Seller data",
@@ -756,6 +972,13 @@ const docTemplate = `{
                 ],
                 "summary": "Update seller information",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "Updated seller data",
                         "name": "input",
@@ -809,6 +1032,13 @@ const docTemplate = `{
                 "summary": "Create a new item",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Item data",
                         "name": "input",
                         "in": "body",
@@ -858,6 +1088,13 @@ const docTemplate = `{
                 ],
                 "summary": "Update an existing item",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Item ID",
@@ -920,6 +1157,13 @@ const docTemplate = `{
                 ],
                 "summary": "Upload an image for an item",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Item ID",
@@ -1225,6 +1469,17 @@ const docTemplate = `{
                 }
             }
         },
+        "model.AddToCartInput": {
+            "type": "object",
+            "properties": {
+                "item_id": {
+                    "type": "integer"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.Admin": {
             "type": "object",
             "properties": {
@@ -1261,6 +1516,25 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/model.Item"
                     }
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.BrandInput": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.BrandOutput": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
                 },
                 "name": {
                     "type": "string"
@@ -1322,6 +1596,29 @@ const docTemplate = `{
                 }
             }
         },
+        "model.CartItem": {
+            "type": "object",
+            "properties": {
+                "buyer": {
+                    "$ref": "#/definitions/model.Buyer"
+                },
+                "buyer_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "item": {
+                    "$ref": "#/definitions/model.Item"
+                },
+                "item_id": {
+                    "type": "integer"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.Category": {
             "type": "object",
             "properties": {
@@ -1333,6 +1630,25 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/model.Item"
                     }
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CategoryInput": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CategoryOutput": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
                 },
                 "name": {
                     "type": "string"
@@ -1563,6 +1879,25 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/model.Item"
                     }
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.MaterialInput": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.MaterialOutput": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
                 },
                 "name": {
                     "type": "string"

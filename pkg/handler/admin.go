@@ -12,7 +12,8 @@ import (
 // @Description Registers a new admin user
 // @Accept json
 // @Produce json
-// @Param input body model.Admin true "Admin signup data"
+// @Param Authorization header string true "Bearer {JWT}"
+// @Param input body model.AdminLoginRequest true "Admin signup data"
 // @Success 201 {object} SuccessResponse "Admin signed up successfully"
 // @Failure 400 {object} ErrorResponse "Invalid input data"
 // @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"

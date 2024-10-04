@@ -21,6 +21,17 @@ func (s *CategoryService) DeleteCategory(id int) error {
 	return s.repo.DeleteCategory(id)
 }
 
-func (s *CategoryService) GetCategoryList() ([]model.Category, error) {
-	return s.repo.GetCategoryList()
+func (s *CategoryService) GetCategoryList() ([]model.CategoryOutput, error) {
+	categories, err := s.repo.GetCategoryList()
+	if err != nil {
+		return nil, err
+	}
+	var categoriesInfo []model.CategoryOutput
+	for _, category := range categories {
+		categoriesInfo = append(categoriesInfo, model.CategoryOutput{
+			Id:   category.ID,
+			Name: category.Name,
+		})
+	}
+	return categoriesInfo, nil
 }

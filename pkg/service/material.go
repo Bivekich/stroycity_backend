@@ -21,6 +21,17 @@ func (s *MaterialService) DeleteMaterial(id int) error {
 	return s.repo.DeleteMaterial(id)
 }
 
-func (s *MaterialService) GetMaterialList() ([]model.Material, error) {
-	return s.repo.GetMaterialList()
+func (s *MaterialService) GetMaterialList() ([]model.MaterialOutput, error) {
+	materials, err := s.repo.GetMaterialList()
+	if err != nil {
+		return nil, err
+	}
+	var materialsInfo []model.MaterialOutput
+	for _, material := range materials {
+		materialsInfo = append(materialsInfo, model.MaterialOutput{
+			ID:   material.ID,
+			Name: material.Name,
+		})
+	}
+	return materialsInfo, nil
 }

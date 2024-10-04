@@ -10,39 +10,72 @@ type OrderService struct {
 	orderRepo  repository.Order
 	itemRepo   repository.Item
 	sellerRepo repository.Seller
+	cartRepo   repository.Cart
 }
 
-func NewOrderService(orderRepo repository.Order, itemRepo repository.Item, sellerRepo repository.Seller) *OrderService {
+func NewOrderService(orderRepo repository.Order, itemRepo repository.Item, sellerRepo repository.Seller, cartRepo repository.Cart) *OrderService {
 	return &OrderService{
 		orderRepo:  orderRepo,
 		itemRepo:   itemRepo,
 		sellerRepo: sellerRepo,
+		cartRepo:   cartRepo,
 	}
 }
 
-func (s *OrderService) CreateOrder(order model.Order) error {
-	total := 0.0
-
-	for _, orderItem := range order.OrderItems {
-		item, err := s.itemRepo.GetItemById(orderItem.ItemID)
-		if err != nil {
-			return err
-		}
-
-		if item.Quantity < orderItem.Quantity {
-			return fmt.Errorf("not enough stock for item: %s", item.Name)
-		}
+func (s *OrderService) CreateOrder(buyerID string) error {
+	// Получаем товары из корзины покупателя
+	cartItems, err := s.cartRepo.GetCartItemsByBuyerID(buyerID)
+	if err != nil {
+		return err
 	}
 
+	if len(cartItems) == 0 {
+		return fmt.Errorf("cart is empty")
+	}
+
+	total := 0.0
+	orderItems := []model.OrderItem{}
+
+	// Проверяем наличие товаров на складе
+	for _, cartItem := range cartItems {
+		item, err := s.itemRepo.GetItemById(cartItem.ItemID)
+		if err != nil {
+			return err
+		}
+
+		if item.Quantity < cartItem.Quantity {
+			return fmt.Errorf("not enough stock for item: %s", item.Name)
+		}
+
+		// Добавляем в список товаров для заказа
+		orderItem := model.OrderItem{
+			ItemID:    cartItem.ItemID,
+			Quantity:  cartItem.Quantity,
+			UnitPrice: item.Price,
+			Total:     item.Price * float64(cartItem.Quantity),
+		}
+		orderItems = append(orderItems, orderItem)
+		total += orderItem.Total
+	}
+
+	// Создаем заказ
+	order := model.Order{
+		BuyerID:    buyerID,
+		OrderItems: orderItems,
+		Total:      total,
+	}
+
+	// Сохраняем заказ
+	if err := s.orderRepo.CreateOrder(order); err != nil {
+		return err
+	}
+
+	// Обновляем количество товара и баланс продавца
 	for _, orderItem := range order.OrderItems {
 		item, err := s.itemRepo.GetItemById(orderItem.ItemID)
 		if err != nil {
 			return err
 		}
-
-		orderItem.UnitPrice = item.Price
-		orderItem.Total = item.Price * float64(orderItem.Quantity)
-		total += orderItem.Total
 
 		item.Quantity -= orderItem.Quantity
 		if err := s.itemRepo.UpdateItem(item); err != nil {
@@ -59,9 +92,8 @@ func (s *OrderService) CreateOrder(order model.Order) error {
 		}
 	}
 
-	order.Total = total
-
-	if err := s.orderRepo.CreateOrder(order); err != nil {
+	// Очищаем корзину
+	if err := s.cartRepo.ClearCart(buyerID); err != nil {
 		return err
 	}
 
@@ -70,4 +102,8 @@ func (s *OrderService) CreateOrder(order model.Order) error {
 
 func (s *OrderService) GetOrderById(orderID int) (model.Order, error) {
 	return s.orderRepo.GetOrderById(orderID)
+}
+
+func (s *OrderService) ClearCart(buyerID string) error {
+	return s.cartRepo.ClearCart(buyerID)
 }

@@ -40,6 +40,7 @@ func (h *Handler) BuyerSignUp(c *gin.Context) {
 // @Description Retrieve buyer information by ID
 // @Tags Buyers
 // @Produce json
+// @Param Authorization header string true "Bearer {JWT}"
 // @Success 200 {object} model.BuyerOutput "Buyer data"
 // @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"
 // @Failure 404 {object} ErrorResponse "Buyer not found"
@@ -68,6 +69,7 @@ func (h *Handler) GetBuyer(c *gin.Context) {
 // @Tags Buyers
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "Bearer {JWT}"
 // @Param input body model.Buyer true "Buyer data"
 // @Success 200 {string} string "Buyer updated successfully"
 // @Failure 400 {object} ErrorResponse "Invalid input data"

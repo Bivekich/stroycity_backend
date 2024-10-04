@@ -14,6 +14,13 @@ definitions:
       token:
         type: string
     type: object
+  model.AddToCartInput:
+    properties:
+      item_id:
+        type: integer
+      quantity:
+        type: integer
+    type: object
   model.Admin:
     properties:
       id:
@@ -38,6 +45,18 @@ definitions:
         items:
           $ref: '#/definitions/model.Item'
         type: array
+      name:
+        type: string
+    type: object
+  model.BrandInput:
+    properties:
+      name:
+        type: string
+    type: object
+  model.BrandOutput:
+    properties:
+      id:
+        type: integer
       name:
         type: string
     type: object
@@ -77,6 +96,21 @@ definitions:
           $ref: '#/definitions/model.Order'
         type: array
     type: object
+  model.CartItem:
+    properties:
+      buyer:
+        $ref: '#/definitions/model.Buyer'
+      buyer_id:
+        type: string
+      id:
+        type: integer
+      item:
+        $ref: '#/definitions/model.Item'
+      item_id:
+        type: integer
+      quantity:
+        type: integer
+    type: object
   model.Category:
     properties:
       id:
@@ -85,6 +119,18 @@ definitions:
         items:
           $ref: '#/definitions/model.Item'
         type: array
+      name:
+        type: string
+    type: object
+  model.CategoryInput:
+    properties:
+      name:
+        type: string
+    type: object
+  model.CategoryOutput:
+    properties:
+      id:
+        type: integer
       name:
         type: string
     type: object
@@ -239,6 +285,18 @@ definitions:
       name:
         type: string
     type: object
+  model.MaterialInput:
+    properties:
+      name:
+        type: string
+    type: object
+  model.MaterialOutput:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   model.Order:
     properties:
       buyer:
@@ -301,6 +359,11 @@ paths:
     delete:
       description: Deletes a brand by ID. Only accessible by admin.
       parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Brand ID
         in: query
         name: brand_id
@@ -334,12 +397,17 @@ paths:
       description: Creates a new brand with the provided details. Only accessible
         by admin.
       parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Brand data
         in: body
         name: input
         required: true
         schema:
-          $ref: '#/definitions/model.Brand'
+          $ref: '#/definitions/model.BrandInput'
       produces:
       - application/json
       responses:
@@ -366,6 +434,11 @@ paths:
     delete:
       description: Delete a category by ID
       parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Category ID
         in: query
         name: category_id
@@ -398,12 +471,17 @@ paths:
       - application/json
       description: Create a new category in the system
       parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Category data
         in: body
         name: input
         required: true
         schema:
-          $ref: '#/definitions/model.Category'
+          $ref: '#/definitions/model.CategoryInput'
       produces:
       - application/json
       responses:
@@ -430,6 +508,11 @@ paths:
     delete:
       description: Delete a material from the system by its ID
       parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Material ID
         in: query
         name: material_id
@@ -462,12 +545,17 @@ paths:
       - application/json
       description: Create a new material in the system
       parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Material data
         in: body
         name: input
         required: true
         schema:
-          $ref: '#/definitions/model.Material'
+          $ref: '#/definitions/model.MaterialInput'
       produces:
       - application/json
       responses:
@@ -496,6 +584,11 @@ paths:
       - application/json
       description: Registers a new admin user
       parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Admin signup data
         in: body
         name: input
@@ -534,7 +627,7 @@ paths:
           description: List of brands
           schema:
             items:
-              $ref: '#/definitions/model.Brand'
+              $ref: '#/definitions/model.BrandOutput'
             type: array
         "401":
           description: You are not authorized to access this resource
@@ -550,6 +643,12 @@ paths:
   /buyer:
     get:
       description: Retrieve buyer information by ID
+      parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -573,6 +672,11 @@ paths:
       - application/json
       description: Update buyer details
       parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Buyer data
         in: body
         name: input
@@ -605,8 +709,13 @@ paths:
     get:
       description: Retrieve an order by its ID for the buyer
       parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Order ID
-        in: path
+        in: query
         name: order_id
         required: true
         type: integer
@@ -629,29 +738,30 @@ paths:
           description: Order not found
           schema:
             $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
       summary: Get an order by ID
       tags:
       - Orders
     post:
-      consumes:
-      - application/json
-      description: Create a new order for the buyer
+      description: Create an order from the items in the cart of the current buyer
       parameters:
-      - description: Order data
-        in: body
-        name: input
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
         required: true
-        schema:
-          $ref: '#/definitions/model.Order'
+        type: string
       produces:
       - application/json
       responses:
-        "201":
+        "200":
           description: Order created successfully
           schema:
-            type: string
+            $ref: '#/definitions/handler.SuccessResponse'
         "400":
-          description: Invalid input data
+          description: Cart is empty
           schema:
             $ref: '#/definitions/handler.ErrorResponse'
         "403":
@@ -659,12 +769,103 @@ paths:
           schema:
             $ref: '#/definitions/handler.ErrorResponse'
         "500":
-          description: Failed to create order
+          description: Internal server error
           schema:
             $ref: '#/definitions/handler.ErrorResponse'
       summary: Create a new order
       tags:
       - Orders
+  /cart:
+    get:
+      description: Retrieves the contents of the buyer's cart. Only accessible by
+        buyers.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Cart items
+          schema:
+            items:
+              $ref: '#/definitions/model.CartItem'
+            type: array
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Get cart contents
+      tags:
+      - cart
+  /cart/add:
+    post:
+      consumes:
+      - application/json
+      description: Adds a specified item with a specified quantity to the buyer's
+        cart. Only accessible by buyers.
+      parameters:
+      - description: Item ID and Quantity
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.AddToCartInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Item added to cart
+          schema:
+            type: string
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Add an item to cart
+      tags:
+      - cart
+  /cart/remove:
+    delete:
+      description: Removes a specified item from the buyer's cart by cart item ID.
+        Only accessible by buyers.
+      parameters:
+      - description: Cart Item ID
+        in: query
+        name: cart_item_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Item removed from cart
+          schema:
+            type: string
+        "400":
+          description: Invalid cart item ID
+          schema:
+            type: string
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Remove an item from the cart
+      tags:
+      - cart
   /category:
     get:
       description: Retrieve a list of all categories
@@ -675,7 +876,7 @@ paths:
           description: List of categories
           schema:
             items:
-              $ref: '#/definitions/model.Category'
+              $ref: '#/definitions/model.CategoryOutput'
             type: array
         "500":
           description: Failed to retrieve category list
@@ -748,7 +949,7 @@ paths:
           description: List of materials
           schema:
             items:
-              $ref: '#/definitions/model.Material'
+              $ref: '#/definitions/model.MaterialOutput'
             type: array
         "500":
           description: Failed to retrieve material list
@@ -760,6 +961,12 @@ paths:
   /seller:
     get:
       description: Retrieve seller details by ID
+      parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -783,6 +990,11 @@ paths:
       - application/json
       description: Update the details of the seller
       parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Updated seller data
         in: body
         name: input
@@ -817,6 +1029,11 @@ paths:
       - application/json
       description: Update an item by its ID
       parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Item ID
         in: query
         name: id
@@ -859,6 +1076,11 @@ paths:
       - application/json
       description: Create a new item in the system
       parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Item data
         in: body
         name: input
@@ -891,6 +1113,11 @@ paths:
     post:
       description: Upload an image for a specific item by ID
       parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Item ID
         in: query
         name: item_id

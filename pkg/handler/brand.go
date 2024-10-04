@@ -13,7 +13,8 @@ import (
 // @Tags         brands
 // @Accept       json
 // @Produce      json
-// @Param        input  body  model.Brand  true  "Brand data"
+// @Param Authorization header string true "Bearer {JWT}"
+// @Param        input  body  model.BrandInput  true  "Brand data"
 // @Success      201  {string}  string  "Brand created successfully"
 // @Failure      400  {string}  string  "Invalid input data"
 // @Failure      401  {string}  string  "You are not authorized to access this resource"
@@ -47,6 +48,7 @@ func (h *Handler) CreateBrand(c *gin.Context) {
 // @Description  Deletes a brand by ID. Only accessible by admin.
 // @Tags         brands
 // @Produce      json
+// @Param Authorization header string true "Bearer {JWT}"
 // @Param        brand_id  query  int  true  "Brand ID"
 // @Success      200  {string}  string  "Brand deleted successfully"
 // @Failure      400  {string}  string  "Invalid brand ID"
@@ -81,7 +83,7 @@ func (h *Handler) DeleteBrand(c *gin.Context) {
 // @Description  Retrieves a list of all brands. Only accessible by admin.
 // @Tags         brands
 // @Produce      json
-// @Success      200  {array}  model.Brand  "List of brands"
+// @Success      200  {array}  model.BrandOutput  "List of brands"
 // @Failure      401  {string}  string  "You are not authorized to access this resource"
 // @Failure      500  {string}  string  "Failed to get brand list"
 // @Router       /brand [get]

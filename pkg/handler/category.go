@@ -13,7 +13,8 @@ import (
 // @Tags Categories
 // @Accept json
 // @Produce json
-// @Param input body model.Category true "Category data"
+// @Param Authorization header string true "Bearer {JWT}"
+// @Param input body model.CategoryInput true "Category data"
 // @Success 200 {string} string "Category created successfully"
 // @Failure 400 {object} ErrorResponse "Invalid input data"
 // @Failure 401 {object} ErrorResponse "You are not authorized to access this resource"
@@ -47,6 +48,7 @@ func (h *Handler) CreateCategory(c *gin.Context) {
 // @Description Delete a category by ID
 // @Tags Categories
 // @Produce json
+// @Param Authorization header string true "Bearer {JWT}"
 // @Param category_id query string true "Category ID"
 // @Success 200 {string} string "Category deleted successfully"
 // @Failure 400 {object} ErrorResponse "Invalid category ID"
@@ -82,7 +84,7 @@ func (h *Handler) DeleteCategory(c *gin.Context) {
 // @Description Retrieve a list of all categories
 // @Tags Categories
 // @Produce json
-// @Success 200 {array} model.Category "List of categories"
+// @Success 200 {array} model.CategoryOutput "List of categories"
 // @Failure 500 {object} ErrorResponse "Failed to retrieve category list"
 // @Router /category [get]
 func (h *Handler) GetCategoryList(c *gin.Context) {

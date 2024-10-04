@@ -13,6 +13,7 @@ import (
 // @Tags Items
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "Bearer {JWT}"
 // @Param input body model.Item true "Item data"
 // @Success 201 {string} string "Item created successfully"
 // @Failure 400 {object} ErrorResponse "Invalid input data"
@@ -79,6 +80,7 @@ func (h *Handler) GetItemById(c *gin.Context) {
 // @Tags Items
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "Bearer {JWT}"
 // @Param id query string true "Item ID"
 // @Param input body model.Item true "Item data"
 // @Success 200 {string} string "Item updated successfully"
@@ -172,6 +174,7 @@ func (h *Handler) GetItemList(c *gin.Context) {
 // @Description Upload an image for a specific item by ID
 // @Tags Items
 // @Produce json
+// @Param Authorization header string true "Bearer {JWT}"
 // @Param item_id query string true "Item ID"
 // @Param image formData file true "Image file"
 // @Success 200 {object} SuccessResponse ""url": "url""

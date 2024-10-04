@@ -5,3 +5,12 @@ type Category struct {
 	Name  string `json:"name" gorm:"not null"`
 	Items []Item `json:"items" gorm:"foreignKey:CategoryID"`
 }
+
+type CategoryInput struct {
+	Name string `json:"name"`
+}
+
+type CategoryOutput struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}

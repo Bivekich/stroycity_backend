@@ -14,6 +14,7 @@ type Repository struct {
 	Buyer
 	Order
 	Admin
+	Cart
 }
 
 func NewRepository(db *gorm.DB) *Repository {
@@ -26,6 +27,7 @@ func NewRepository(db *gorm.DB) *Repository {
 		Buyer:    NewBuyerRepository(db),
 		Order:    NewOrderRepository(db),
 		Admin:    NewAdminRepository(db),
+		Cart:     NewCartRepository(db),
 	}
 }
 
@@ -78,4 +80,14 @@ type Order interface {
 type Admin interface {
 	AdminSignUp(admin model.Admin) error
 	AdminSignIn(login, password string) (model.Admin, error)
+}
+
+type Cart interface {
+	AddToCart(cartItem model.CartItem) error
+	GetCartByBuyerID(buyerID string) (model.Cart, error)
+	UpdateCartItem(cartItem model.CartItem) error
+	GetCartItemByID(cartItemID int) (model.CartItem, error)
+	RemoveFromCart(cartItemID int) error
+	ClearCart(buyerID string) error
+	GetCartItemsByBuyerID(buyerID string) ([]model.CartItem, error)
 }

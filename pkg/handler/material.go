@@ -13,7 +13,8 @@ import (
 // @Tags Materials
 // @Accept json
 // @Produce json
-// @Param input body model.Material true "Material data"
+// @Param Authorization header string true "Bearer {JWT}"
+// @Param input body model.MaterialInput true "Material data"
 // @Success 201 {string} string "Material created successfully"
 // @Failure 400 {object} ErrorResponse "Invalid input data"
 // @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"
@@ -49,6 +50,7 @@ func (h *Handler) CreateMaterial(c *gin.Context) {
 // @Description Delete a material from the system by its ID
 // @Tags Materials
 // @Produce json
+// @Param Authorization header string true "Bearer {JWT}"
 // @Param material_id query string true "Material ID"
 // @Success 200 {string} string "Material deleted successfully"
 // @Failure 400 {object} ErrorResponse "Invalid material ID"
@@ -85,7 +87,7 @@ func (h *Handler) DeleteMaterial(c *gin.Context) {
 // @Description Retrieve a list of materials from the system
 // @Tags Materials
 // @Produce json
-// @Success 200 {array} model.Material "List of materials"
+// @Success 200 {array} model.MaterialOutput "List of materials"
 // @Failure 500 {object} ErrorResponse "Failed to retrieve material list"
 // @Router /material [get]
 func (h *Handler) GetMaterialList(c *gin.Context) {

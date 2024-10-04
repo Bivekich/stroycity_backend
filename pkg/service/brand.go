@@ -21,6 +21,17 @@ func (s *BrandService) DeleteBrand(id int) error {
 	return s.repo.DeleteBrand(id)
 }
 
-func (s *BrandService) GetBrandList() ([]model.Brand, error) {
-	return s.repo.GetBrandList()
+func (s *BrandService) GetBrandList() ([]model.BrandOutput, error) {
+	brands, err := s.repo.GetBrandList()
+	if err != nil {
+		return nil, err
+	}
+	var brandsInfo []model.BrandOutput
+	for _, brand := range brands {
+		brandsInfo = append(brandsInfo, model.BrandOutput{
+			ID:   brand.ID,
+			Name: brand.Name,
+		})
+	}
+	return brandsInfo, nil
 }

@@ -122,6 +122,12 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			order.POST("", h.CreateOrder)
 		}
 
+		cart := buyer.Group("/cart")
+		{
+			cart.GET("", h.GetCart)
+			cart.POST("", h.AddToCart)
+			cart.DELETE("", h.RemoveFromCart)
+		}
 	}
 	////////////////////////////////////////////////////////////
 
