@@ -10,11 +10,17 @@ type Buyer struct {
 }
 
 type BuyerOutput struct {
-	ID        string     `json:"id"`
-	Name      string     `json:"name"`
-	Email     string     `json:"email"`
-	Orders    []Order    `json:"orders"`
-	Favorites []ItemInfo `json:"favorites"`
+	ID        string        `json:"id"`
+	Name      string        `json:"name"`
+	Email     string        `json:"email"`
+	Orders    []OrderOutput `json:"orders"`
+	Favorites []ItemInfo    `json:"favorites"`
+}
+
+type BuyerInput struct {
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type BuyerSignInResponse struct {

@@ -15,6 +15,7 @@ type Repository struct {
 	Order
 	Admin
 	Cart
+	Review
 }
 
 func NewRepository(db *gorm.DB) *Repository {
@@ -28,6 +29,7 @@ func NewRepository(db *gorm.DB) *Repository {
 		Order:    NewOrderRepository(db),
 		Admin:    NewAdminRepository(db),
 		Cart:     NewCartRepository(db),
+		Review:   NewReviewRepository(db),
 	}
 }
 
@@ -90,4 +92,9 @@ type Cart interface {
 	RemoveFromCart(cartItemID int) error
 	ClearCart(buyerID string) error
 	GetCartItemsByBuyerID(buyerID string) ([]model.CartItem, error)
+}
+
+type Review interface {
+	CreateReview(review model.Review) error
+	GetReviewsByItemID(itemID int) ([]model.Review, error)
 }

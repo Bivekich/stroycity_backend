@@ -375,7 +375,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Admin"
+                            "$ref": "#/definitions/model.AdminLoginRequest"
                         }
                     }
                 ],
@@ -508,7 +508,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Buyer"
+                            "$ref": "#/definitions/model.BuyerInput"
                         }
                     }
                 ],
@@ -570,7 +570,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Order data",
                         "schema": {
-                            "$ref": "#/definitions/model.Order"
+                            "$ref": "#/definitions/model.OrderOutput"
                         }
                     },
                     "400": {
@@ -645,6 +645,65 @@ const docTemplate = `{
                 }
             }
         },
+        "/buyer/review": {
+            "post": {
+                "description": "Позволяет покупателю создать отзыв для товара.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reviews"
+                ],
+                "summary": "Создание нового отзыва",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Информация о отзыве",
+                        "name": "review",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Review"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Review created successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/cart": {
             "get": {
                 "description": "Retrieves the contents of the buyer's cart. Only accessible by buyers.",
@@ -655,13 +714,22 @@ const docTemplate = `{
                     "cart"
                 ],
                 "summary": "Get cart contents",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Cart items",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.CartItem"
+                                "$ref": "#/definitions/model.CartOutput"
                             }
                         }
                     },
@@ -694,6 +762,13 @@ const docTemplate = `{
                 ],
                 "summary": "Add an item to cart",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "Item ID and Quantity",
                         "name": "input",
@@ -743,6 +818,13 @@ const docTemplate = `{
                 ],
                 "summary": "Remove an item from the cart",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "integer",
                         "description": "Cart Item ID",
@@ -919,6 +1001,53 @@ const docTemplate = `{
                 }
             }
         },
+        "/review": {
+            "get": {
+                "description": "Позволяет получить список отзывов для указанного товара по его ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reviews"
+                ],
+                "summary": "Получение отзывов для товара",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID товара",
+                        "name": "item_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список отзывов для товара",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Review"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid item ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/seller": {
             "get": {
                 "description": "Retrieve seller details by ID",
@@ -942,7 +1071,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Seller data",
                         "schema": {
-                            "$ref": "#/definitions/model.Seller"
+                            "$ref": "#/definitions/model.SellerOutput"
                         }
                     },
                     "403": {
@@ -985,7 +1114,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Seller"
+                            "$ref": "#/definitions/model.SellerInput"
                         }
                     }
                 ],
@@ -1044,7 +1173,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Item"
+                            "$ref": "#/definitions/model.ItemInput"
                         }
                     }
                 ],
@@ -1108,7 +1237,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Item"
+                            "$ref": "#/definitions/model.ItemInput"
                         }
                     }
                 ],
@@ -1325,7 +1454,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.LoginRequest"
+                            "$ref": "#/definitions/model.SellerSignInResponse"
                         }
                     }
                 ],
@@ -1371,7 +1500,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Buyer"
+                            "$ref": "#/definitions/model.BuyerInput"
                         }
                     }
                 ],
@@ -1417,7 +1546,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Seller"
+                            "$ref": "#/definitions/model.SellerInput"
                         }
                     }
                 ],
@@ -1477,20 +1606,6 @@ const docTemplate = `{
                 },
                 "quantity": {
                     "type": "integer"
-                }
-            }
-        },
-        "model.Admin": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "login": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
                 }
             }
         },
@@ -1570,6 +1685,20 @@ const docTemplate = `{
                 }
             }
         },
+        "model.BuyerInput": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
         "model.BuyerOutput": {
             "type": "object",
             "properties": {
@@ -1591,31 +1720,39 @@ const docTemplate = `{
                 "orders": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Order"
+                        "$ref": "#/definitions/model.OrderOutput"
                     }
                 }
             }
         },
-        "model.CartItem": {
+        "model.CartItemInfo": {
             "type": "object",
             "properties": {
-                "buyer": {
-                    "$ref": "#/definitions/model.Buyer"
-                },
-                "buyer_id": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "integer"
                 },
-                "item": {
-                    "$ref": "#/definitions/model.Item"
+                "name": {
+                    "type": "string"
                 },
-                "item_id": {
-                    "type": "integer"
+                "price": {
+                    "type": "number"
                 },
                 "quantity": {
                     "type": "integer"
+                }
+            }
+        },
+        "model.CartOutput": {
+            "type": "object",
+            "properties": {
+                "buyer_id": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.CartItemInfo"
+                    }
                 }
             }
         },
@@ -1857,6 +1994,50 @@ const docTemplate = `{
                 }
             }
         },
+        "model.ItemInput": {
+            "type": "object",
+            "properties": {
+                "article": {
+                    "type": "string"
+                },
+                "brand_id": {
+                    "type": "integer"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "height": {
+                    "type": "integer"
+                },
+                "length": {
+                    "type": "integer"
+                },
+                "material_id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "price_with_discount": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "weight": {
+                    "type": "integer"
+                },
+                "width": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.LoginRequest": {
             "type": "object",
             "properties": {
@@ -1959,6 +2140,66 @@ const docTemplate = `{
                 }
             }
         },
+        "model.OrderItemInfo": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.OrderOutput": {
+            "type": "object",
+            "properties": {
+                "buyer_id": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.OrderItemInfo"
+                    }
+                },
+                "status": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "number"
+                }
+            }
+        },
+        "model.Review": {
+            "type": "object",
+            "properties": {
+                "buyer_id": {
+                    "type": "string"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "item_id": {
+                    "type": "integer"
+                },
+                "rating": {
+                    "type": "number"
+                }
+            }
+        },
         "model.Seller": {
             "type": "object",
             "properties": {
@@ -1984,6 +2225,60 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "shop_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.SellerInput": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "shop_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.SellerOutput": {
+            "type": "object",
+            "properties": {
+                "balance": {
+                    "type": "number"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.ItemInfo"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "shop_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.SellerSignInResponse": {
+            "type": "object",
+            "properties": {
+                "seller": {
+                    "$ref": "#/definitions/model.SellerOutput"
+                },
+                "token": {
                     "type": "string"
                 }
             }

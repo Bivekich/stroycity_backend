@@ -12,7 +12,7 @@ import (
 // @Tags Sellers
 // @Accept json
 // @Produce json
-// @Param input body model.Seller true "Seller data"
+// @Param input body model.SellerInput true "Seller data"
 // @Success 201 {string} string "Seller registered successfully"
 // @Failure 400 {object} ErrorResponse "Invalid input data"
 // @Failure 500 {object} ErrorResponse "Failed to register seller"
@@ -42,7 +42,7 @@ func (h *Handler) SellerSignUp(c *gin.Context) {
 // @Tags Sellers
 // @Produce json
 // @Param Authorization header string true "Bearer {JWT}"
-// @Success 200 {object} model.Seller "Seller data"
+// @Success 200 {object} model.SellerOutput "Seller data"
 // @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"
 // @Failure 500 {object} ErrorResponse "Failed to retrieve seller"
 // @Router /seller [get]
@@ -73,7 +73,7 @@ func (h *Handler) GetSeller(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Bearer {JWT}"
-// @Param input body model.Seller true "Updated seller data"
+// @Param input body model.SellerInput true "Updated seller data"
 // @Success 200 {string} string "Seller updated successfully"
 // @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"
 // @Failure 400 {object} ErrorResponse "Invalid input data"
@@ -114,7 +114,7 @@ func (h *Handler) UpdateSeller(c *gin.Context) {
 // @Tags Sellers
 // @Accept json
 // @Produce json
-// @Param input body model.LoginRequest true "Login credentials"
+// @Param input body model.SellerSignInResponse true "Login credentials"
 // @Success 200 {object} model.Seller "Seller data"
 // @Failure 400 {object} ErrorResponse "Invalid input data"
 // @Failure 401 {object} ErrorResponse "Unauthorized"

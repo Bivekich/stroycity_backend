@@ -25,6 +25,21 @@ type Item struct {
 	Images      []Image  `gorm:"foreignKey:ItemID"`
 }
 
+type ItemInput struct {
+	Name              string  `json:"name"`
+	Description       string  `json:"description"`
+	Article           string  `json:"article"`
+	Price             float64 `json:"price"`
+	PriceWithDiscount float64 `json:"price_with_discount"`
+	Quantity          int     `json:"quantity"`
+	Length            int     `json:"length"`
+	Width             int     `json:"width"`
+	Height            int     `json:"height"`
+	Weight            int     `json:"weight"`
+	CategoryID        int     `json:"category_id"`
+	BrandID           int     `json:"brand_id"`
+	MaterialID        int     `json:"material_id"`
+}
 type ItemInfo struct {
 	ID          int     `json:"id"`
 	Name        string  `json:"name"`

@@ -19,6 +19,13 @@ type SellerOutput struct {
 	Items    []ItemInfo `json:"items"`
 }
 
+type SellerInput struct {
+	Name     string `json:"name"`
+	ShopName string `json:"shop_name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 type SellerSignInResponse struct {
 	Token  string       `json:"token"`
 	Seller SellerOutput `json:"seller"`

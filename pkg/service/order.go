@@ -100,10 +100,33 @@ func (s *OrderService) CreateOrder(buyerID string) error {
 	return nil
 }
 
-func (s *OrderService) GetOrderById(orderID int) (model.Order, error) {
-	return s.orderRepo.GetOrderById(orderID)
+func (s *OrderService) GetOrderById(orderID int) (model.OrderOutput, error) {
+	order, err := s.orderRepo.GetOrderById(orderID)
+	if err != nil {
+		return model.OrderOutput{}, err
+	}
+
+	orderOutput := s.orderToOrderOutput(order)
+	return orderOutput, nil
 }
 
 func (s *OrderService) ClearCart(buyerID string) error {
 	return s.cartRepo.ClearCart(buyerID)
+}
+
+func (s *OrderService) orderToOrderOutput(order model.Order) model.OrderOutput {
+	orderOutput := model.OrderOutput{}
+	orderOutput.Total = order.Total
+	orderOutput.Status = order.Status
+	for _, orderItem := range order.OrderItems {
+		itemInfo, _ := s.itemRepo.GetItemById(orderItem.ID)
+
+		orderOutput.Items = append(orderOutput.Items, model.OrderItemInfo{
+			ID:       orderItem.ID,
+			Name:     itemInfo.Name,
+			Price:    itemInfo.Price,
+			Quantity: itemInfo.Quantity,
+		})
+	}
+	return orderOutput
 }

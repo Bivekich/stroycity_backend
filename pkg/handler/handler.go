@@ -39,6 +39,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	router.GET("/category", h.GetCategoryList)
 	router.GET("/brand", h.GetBrandList)
 	router.GET("/material", h.GetMaterialList)
+	router.GET("/review", h.GetReviews)
 
 	item := router.Group("/item")
 	{
@@ -128,6 +129,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			cart.POST("", h.AddToCart)
 			cart.DELETE("", h.RemoveFromCart)
 		}
+
+		buyer.POST("/review", h.CreateReview)
 	}
 	////////////////////////////////////////////////////////////
 

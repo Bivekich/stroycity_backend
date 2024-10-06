@@ -6,11 +6,12 @@ import (
 )
 
 type CartService struct {
-	repo repository.Cart
+	repo     repository.Cart
+	itemRepo repository.Item
 }
 
-func NewCartService(repo repository.Cart) *CartService {
-	return &CartService{repo: repo}
+func NewCartService(repo repository.Cart, itemRepo repository.Item) *CartService {
+	return &CartService{repo: repo, itemRepo: itemRepo}
 }
 
 func (s *CartService) AddToCart(buyerID string, itemID int, quantity int) error {
@@ -23,8 +24,24 @@ func (s *CartService) AddToCart(buyerID string, itemID int, quantity int) error 
 	return s.repo.AddToCart(cartItem)
 }
 
-func (s *CartService) GetCart(buyerID string) (model.Cart, error) {
-	return s.repo.GetCartByBuyerID(buyerID)
+func (s *CartService) GetCart(buyerID string) (model.CartOutput, error) {
+	cart, err := s.repo.GetCartByBuyerID(buyerID)
+	if err != nil {
+		return model.CartOutput{}, err
+	}
+	cartOutput := model.CartOutput{}
+	cartOutput.BuyerID = cart.BuyerID
+	for _, cartItem := range cart.CartItems {
+		itemInfo, _ := s.itemRepo.GetItemById(cartItem.ID)
+
+		cartOutput.Items = append(cartOutput.Items, model.CartItemInfo{
+			ID:       cartItem.ID,
+			Name:     itemInfo.Name,
+			Price:    itemInfo.Price,
+			Quantity: itemInfo.Quantity,
+		})
+	}
+	return cartOutput, nil
 }
 
 func (s *CartService) UpdateCartItem(cartItemID int, quantity int) error {

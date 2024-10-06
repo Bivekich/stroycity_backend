@@ -53,7 +53,7 @@ func (h *Handler) AddToCart(c *gin.Context) {
 // @Tags         cart
 // @Produce      json
 // @Param Authorization header string true "Bearer {JWT}"
-// @Success      200  {array}  model.CartItem  "Cart items"
+// @Success      200  {array}  model.CartOutput  "Cart items"
 // @Failure      403  {string}  string  "You are not authorized to access this resource"
 // @Failure      500  {string}  string  "Internal server error"
 // @Router       /cart [get]

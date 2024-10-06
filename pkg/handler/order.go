@@ -33,7 +33,7 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 		return
 	}
 
-	if len(cartItems.CartItems) == 0 {
+	if len(cartItems.Items) == 0 {
 		newErrorResponse(c, http.StatusBadRequest, "Cart is empty")
 		return
 	}
@@ -62,7 +62,7 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 // @Produce json
 // @Param Authorization header string true "Bearer {JWT}"
 // @Param order_id query int true "Order ID"
-// @Success 200 {object} model.Order "Order data"
+// @Success 200 {object} model.OrderOutput "Order data"
 // @Failure 400 {object} ErrorResponse "Invalid order ID"
 // @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"
 // @Failure 404 {object} ErrorResponse "Order not found"

@@ -15,6 +15,18 @@ type Cart struct {
 	CartItems []CartItem `json:"cart_items" gorm:"foreignKey:BuyerID"`
 }
 
+type CartOutput struct {
+	BuyerID string         `json:"buyer_id"`
+	Items   []CartItemInfo `json:"items"`
+}
+
+type CartItemInfo struct {
+	ID       int     `json:"id"`
+	Name     string  `json:"name"`
+	Price    float64 `json:"price"`
+	Quantity int     `json:"quantity"`
+}
+
 type AddToCartInput struct {
 	ItemID   int `json:"item_id"`
 	Quantity int `json:"quantity"`

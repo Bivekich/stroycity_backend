@@ -14,7 +14,7 @@ import (
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Bearer {JWT}"
-// @Param input body model.Item true "Item data"
+// @Param input body model.ItemInput true "Item data"
 // @Success 201 {string} string "Item created successfully"
 // @Failure 400 {object} ErrorResponse "Invalid input data"
 // @Failure 401 {object} ErrorResponse "You are not authorized to access this resource"
@@ -82,7 +82,7 @@ func (h *Handler) GetItemById(c *gin.Context) {
 // @Produce json
 // @Param Authorization header string true "Bearer {JWT}"
 // @Param id query string true "Item ID"
-// @Param input body model.Item true "Item data"
+// @Param input body model.ItemInput true "Item data"
 // @Success 200 {string} string "Item updated successfully"
 // @Failure 400 {object} ErrorResponse "Invalid input data"
 // @Failure 401 {object} ErrorResponse "You are not authorized to access this resource"

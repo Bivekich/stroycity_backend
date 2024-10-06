@@ -21,15 +21,6 @@ definitions:
       quantity:
         type: integer
     type: object
-  model.Admin:
-    properties:
-      id:
-        type: string
-      login:
-        type: string
-      password:
-        type: string
-    type: object
   model.AdminLoginRequest:
     properties:
       login:
@@ -79,6 +70,15 @@ definitions:
       password:
         type: string
     type: object
+  model.BuyerInput:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
   model.BuyerOutput:
     properties:
       email:
@@ -93,23 +93,28 @@ definitions:
         type: string
       orders:
         items:
-          $ref: '#/definitions/model.Order'
+          $ref: '#/definitions/model.OrderOutput'
         type: array
     type: object
-  model.CartItem:
+  model.CartItemInfo:
     properties:
-      buyer:
-        $ref: '#/definitions/model.Buyer'
-      buyer_id:
-        type: string
       id:
         type: integer
-      item:
-        $ref: '#/definitions/model.Item'
-      item_id:
-        type: integer
+      name:
+        type: string
+      price:
+        type: number
       quantity:
         type: integer
+    type: object
+  model.CartOutput:
+    properties:
+      buyer_id:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/model.CartItemInfo'
+        type: array
     type: object
   model.Category:
     properties:
@@ -267,6 +272,35 @@ definitions:
       price:
         type: number
     type: object
+  model.ItemInput:
+    properties:
+      article:
+        type: string
+      brand_id:
+        type: integer
+      category_id:
+        type: integer
+      description:
+        type: string
+      height:
+        type: integer
+      length:
+        type: integer
+      material_id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+      price_with_discount:
+        type: number
+      quantity:
+        type: integer
+      weight:
+        type: integer
+      width:
+        type: integer
+    type: object
   model.LoginRequest:
     properties:
       email:
@@ -333,6 +367,45 @@ definitions:
       unit_price:
         type: number
     type: object
+  model.OrderItemInfo:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
+    type: object
+  model.OrderOutput:
+    properties:
+      buyer_id:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/model.OrderItemInfo'
+        type: array
+      status:
+        type: string
+      total:
+        type: number
+    type: object
+  model.Review:
+    properties:
+      buyer_id:
+        type: string
+      comment:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      item_id:
+        type: integer
+      rating:
+        type: number
+    type: object
   model.Seller:
     properties:
       balance:
@@ -350,6 +423,41 @@ definitions:
       password:
         type: string
       shop_name:
+        type: string
+    type: object
+  model.SellerInput:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      shop_name:
+        type: string
+    type: object
+  model.SellerOutput:
+    properties:
+      balance:
+        type: number
+      email:
+        type: string
+      id:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/model.ItemInfo'
+        type: array
+      name:
+        type: string
+      shop_name:
+        type: string
+    type: object
+  model.SellerSignInResponse:
+    properties:
+      seller:
+        $ref: '#/definitions/model.SellerOutput'
+      token:
         type: string
     type: object
 info:
@@ -594,7 +702,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/model.Admin'
+          $ref: '#/definitions/model.AdminLoginRequest'
       produces:
       - application/json
       responses:
@@ -682,7 +790,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/model.Buyer'
+          $ref: '#/definitions/model.BuyerInput'
       produces:
       - application/json
       responses:
@@ -725,7 +833,7 @@ paths:
         "200":
           description: Order data
           schema:
-            $ref: '#/definitions/model.Order'
+            $ref: '#/definitions/model.OrderOutput'
         "400":
           description: Invalid order ID
           schema:
@@ -775,10 +883,55 @@ paths:
       summary: Create a new order
       tags:
       - Orders
+  /buyer/review:
+    post:
+      consumes:
+      - application/json
+      description: Позволяет покупателю создать отзыв для товара.
+      parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Информация о отзыве
+        in: body
+        name: review
+        required: true
+        schema:
+          $ref: '#/definitions/model.Review'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Review created successfully
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "403":
+          description: Forbidden
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Создание нового отзыва
+      tags:
+      - reviews
   /cart:
     get:
       description: Retrieves the contents of the buyer's cart. Only accessible by
         buyers.
+      parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -786,7 +939,7 @@ paths:
           description: Cart items
           schema:
             items:
-              $ref: '#/definitions/model.CartItem'
+              $ref: '#/definitions/model.CartOutput'
             type: array
         "403":
           description: You are not authorized to access this resource
@@ -806,6 +959,11 @@ paths:
       description: Adds a specified item with a specified quantity to the buyer's
         cart. Only accessible by buyers.
       parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Item ID and Quantity
         in: body
         name: input
@@ -839,6 +997,11 @@ paths:
       description: Removes a specified item from the buyer's cart by cart item ID.
         Only accessible by buyers.
       parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Cart Item ID
         in: query
         name: cart_item_id
@@ -958,6 +1121,38 @@ paths:
       summary: Get material list
       tags:
       - Materials
+  /review:
+    get:
+      consumes:
+      - application/json
+      description: Позволяет получить список отзывов для указанного товара по его
+        ID.
+      parameters:
+      - description: ID товара
+        in: query
+        name: item_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список отзывов для товара
+          schema:
+            items:
+              $ref: '#/definitions/model.Review'
+            type: array
+        "400":
+          description: Invalid item ID
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Получение отзывов для товара
+      tags:
+      - reviews
   /seller:
     get:
       description: Retrieve seller details by ID
@@ -973,7 +1168,7 @@ paths:
         "200":
           description: Seller data
           schema:
-            $ref: '#/definitions/model.Seller'
+            $ref: '#/definitions/model.SellerOutput'
         "403":
           description: You are not authorized to access this resource
           schema:
@@ -1000,7 +1195,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/model.Seller'
+          $ref: '#/definitions/model.SellerInput'
       produces:
       - application/json
       responses:
@@ -1044,7 +1239,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/model.Item'
+          $ref: '#/definitions/model.ItemInput'
       produces:
       - application/json
       responses:
@@ -1086,7 +1281,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/model.Item'
+          $ref: '#/definitions/model.ItemInput'
       produces:
       - application/json
       responses:
@@ -1225,7 +1420,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/model.LoginRequest'
+          $ref: '#/definitions/model.SellerSignInResponse'
       produces:
       - application/json
       responses:
@@ -1255,7 +1450,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/model.Buyer'
+          $ref: '#/definitions/model.BuyerInput'
       produces:
       - application/json
       responses:
@@ -1285,7 +1480,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/model.Seller'
+          $ref: '#/definitions/model.SellerInput'
       produces:
       - application/json
       responses:
