@@ -4,6 +4,7 @@ import (
 	"errors"
 	"gorm.io/gorm"
 	"stroycity/pkg/model"
+	"time"
 )
 
 type SellerRepository struct {
@@ -41,4 +42,21 @@ func (r *SellerRepository) SellerSignIn(mail, password string) (model.Seller, er
 	}
 
 	return seller, nil
+}
+
+func (r *SellerRepository) GetSellerEarnings(sellerID string) (float64, float64, error) {
+	orderItems := []model.OrderItem{}
+	if err := r.db.Model(&model.OrderItem{}).Where("seller_id = ?", sellerID).Find(&orderItems).Error; err != nil {
+		return 0, 0, err
+	}
+	lastWeek, currentWeek := 0.0, 0.0
+	currentTime := time.Now()
+	for _, orderItem := range orderItems {
+		if currentTime.Before(orderItem.CreatedAt) && currentTime.Add(-7*24*time.Hour).After(orderItem.CreatedAt) {
+			currentWeek += orderItem.Total
+		} else if currentTime.Add(-7*24*time.Hour).Before(orderItem.CreatedAt) && currentTime.Add(-14*24*time.Hour).After(orderItem.CreatedAt) {
+			lastWeek += orderItem.Total
+		}
+	}
+	return currentWeek, lastWeek, errors.New("")
 }

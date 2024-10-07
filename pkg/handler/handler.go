@@ -107,6 +107,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			sellerItem.POST("/image", h.UploadImage)
 		}
 
+		seller.GET("/statistic", h.GetSellerEarnings)
+
 	}
 	////////////////////////////////////////////////////////////
 

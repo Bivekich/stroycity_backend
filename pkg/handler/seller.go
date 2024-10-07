@@ -138,3 +138,42 @@ func (h *Handler) SellerSignIn(c *gin.Context) {
 	// 200 OK и данные о продавце
 	c.JSON(http.StatusOK, seller)
 }
+
+// GetSellerEarnings возвращает заработок продавца за текущую и прошлую неделю
+// @Summary Get seller earnings
+// @Description Retrieve seller earnings for the current and previous week
+// @Tags Sellers
+// @Produce json
+// @Param Authorization header string true "Bearer {JWT}"
+// @Success 200 {object} model.Statistic "Earnings for current and last week"
+// @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"
+// @Failure 500 {object} ErrorResponse "Failed to retrieve earnings"
+// @Router /seller/statistic [get]
+func (h *Handler) GetSellerEarnings(c *gin.Context) {
+	sellerID := c.GetString("user_id")
+
+	// Проверка роли пользователя, чтобы убедиться, что это продавец
+	if role := c.GetString("role"); role != "seller" {
+		newErrorResponse(c, http.StatusForbidden, "You are not authorized to access this resource") // 403 Forbidden, если доступ запрещён
+		return
+	}
+
+	// Получение заработка продавца за текущую и прошлую недели
+	currentWeek, lastWeek, err := h.services.GetSellerEarnings(sellerID)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error()) // 500 Internal Server Error при ошибке сервера
+		return
+	}
+
+	// Формирование ответа
+	statistic := struct {
+		CurrentWeek float64 `json:"current_week"`
+		LastWeek    float64 `json:"last_week"`
+	}{
+		CurrentWeek: currentWeek,
+		LastWeek:    lastWeek,
+	}
+
+	// Возвращаем ответ с кодом 200 OK
+	c.JSON(http.StatusOK, statistic)
+}

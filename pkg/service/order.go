@@ -53,6 +53,7 @@ func (s *OrderService) CreateOrder(buyerID string) error {
 			Quantity:  cartItem.Quantity,
 			UnitPrice: item.Price,
 			Total:     item.Price * float64(cartItem.Quantity),
+			SellerId:  item.SellerID,
 		}
 		orderItems = append(orderItems, orderItem)
 		total += orderItem.Total

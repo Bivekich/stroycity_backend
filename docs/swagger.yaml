@@ -350,6 +350,8 @@ definitions:
     type: object
   model.OrderItem:
     properties:
+      created_at:
+        type: string
       id:
         type: integer
       item:
@@ -362,6 +364,8 @@ definitions:
         type: integer
       quantity:
         type: integer
+      seller_id:
+        type: string
       total:
         type: number
       unit_price:
@@ -459,6 +463,13 @@ definitions:
         $ref: '#/definitions/model.SellerOutput'
       token:
         type: string
+    type: object
+  model.Statistic:
+    properties:
+      current_week:
+        type: number
+      last_week:
+        type: number
     type: object
 info:
   contact: {}
@@ -1349,6 +1360,33 @@ paths:
       summary: Upload an image for an item
       tags:
       - Items
+  /seller/statistic:
+    get:
+      description: Retrieve seller earnings for the current and previous week
+      parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Earnings for current and last week
+          schema:
+            $ref: '#/definitions/model.Statistic'
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to retrieve earnings
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get seller earnings
+      tags:
+      - Sellers
   /sign-in/admin:
     post:
       consumes:

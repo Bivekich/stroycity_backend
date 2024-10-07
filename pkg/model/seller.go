@@ -30,3 +30,8 @@ type SellerSignInResponse struct {
 	Token  string       `json:"token"`
 	Seller SellerOutput `json:"seller"`
 }
+
+type Statistic struct {
+	CurrentWeek float64 `json:"current_week"`
+	LastWeek    float64 `json:"last_week"`
+}

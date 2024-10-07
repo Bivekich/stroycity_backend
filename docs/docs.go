@@ -1342,6 +1342,47 @@ const docTemplate = `{
                 }
             }
         },
+        "/seller/statistic": {
+            "get": {
+                "description": "Retrieve seller earnings for the current and previous week",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Sellers"
+                ],
+                "summary": "Get seller earnings",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer {JWT}",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Earnings for current and last week",
+                        "schema": {
+                            "$ref": "#/definitions/model.Statistic"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to access this resource",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to retrieve earnings",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/sign-in/admin": {
             "post": {
                 "description": "Logs in an admin user",
@@ -2114,6 +2155,9 @@ const docTemplate = `{
         "model.OrderItem": {
             "type": "object",
             "properties": {
+                "created_at": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -2131,6 +2175,9 @@ const docTemplate = `{
                 },
                 "quantity": {
                     "type": "integer"
+                },
+                "seller_id": {
+                    "type": "string"
                 },
                 "total": {
                     "type": "number"
@@ -2280,6 +2327,17 @@ const docTemplate = `{
                 },
                 "token": {
                     "type": "string"
+                }
+            }
+        },
+        "model.Statistic": {
+            "type": "object",
+            "properties": {
+                "current_week": {
+                    "type": "number"
+                },
+                "last_week": {
+                    "type": "number"
                 }
             }
         }

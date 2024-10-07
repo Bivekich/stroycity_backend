@@ -56,6 +56,7 @@ type Seller interface {
 	GetSeller(id string) (model.Seller, error)
 	UpdateSeller(seller model.Seller) error
 	SellerSignIn(mail, password string) (model.Seller, error)
+	GetSellerEarnings(sellerID string) (float64, float64, error)
 }
 
 type Item interface {

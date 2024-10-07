@@ -68,3 +68,7 @@ func (s *SellerService) SellerSignIn(mail, password string) (model.SellerSignInR
 
 	return signInResponse, err
 }
+
+func (s *SellerService) GetSellerEarnings(sellerID string) (float64, float64, error) {
+	return s.repo.GetSellerEarnings(sellerID)
+}
