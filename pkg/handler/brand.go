@@ -88,12 +88,6 @@ func (h *Handler) DeleteBrand(c *gin.Context) {
 // @Failure      500  {string}  string  "Failed to get brand list"
 // @Router       /brand [get]
 func (h *Handler) GetBrandList(c *gin.Context) {
-	// Проверка роли пользователя
-	if role := c.GetString("role"); role != "admin" {
-		newErrorResponse(c, http.StatusUnauthorized, "You are not authorized to access this resource") // 401 Unauthorized
-		return
-	}
-
 	// Получение списка брендов
 	brands, err := h.services.GetBrandList()
 	if err != nil {
