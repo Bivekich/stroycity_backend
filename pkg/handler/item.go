@@ -15,7 +15,7 @@ import (
 // @Produce json
 // @Param Authorization header string true "Bearer {JWT}"
 // @Param input body model.ItemInput true "Item data"
-// @Success 201 {string} string "Item created successfully"
+// @Success 201 {string} string "ItemID"
 // @Failure 400 {object} ErrorResponse "Invalid input data"
 // @Failure 401 {object} ErrorResponse "You are not authorized to access this resource"
 // @Failure 500 {object} ErrorResponse "Failed to create item"
@@ -38,12 +38,13 @@ func (h *Handler) CreateItem(c *gin.Context) {
 	}
 
 	// Создание товара
-	if err := h.services.CreateItem(input); err != nil {
+	itemID, err := h.services.CreateItem(input)
+	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, "Failed to create item: "+err.Error()) // 500 Internal Server Error
 		return
 	}
 
-	c.JSON(http.StatusCreated, "Item created successfully") // 201 Created
+	c.JSON(http.StatusCreated, strconv.Itoa(itemID)) // 201 Created
 }
 
 // GetItemById возвращает товар по ID

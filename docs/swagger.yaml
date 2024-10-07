@@ -1297,7 +1297,7 @@ paths:
       - application/json
       responses:
         "201":
-          description: Item created successfully
+          description: ItemID
           schema:
             type: string
         "400":

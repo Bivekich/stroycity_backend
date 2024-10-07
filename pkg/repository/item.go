@@ -13,8 +13,11 @@ func NewItemRepository(db *gorm.DB) *ItemRepository {
 	return &ItemRepository{db: db}
 }
 
-func (r *ItemRepository) CreateItem(item model.Item) error {
-	return r.db.Model(&model.Item{}).Create(&item).Error
+func (r *ItemRepository) CreateItem(item model.Item) (int, error) {
+	if err := r.db.Model(&model.Item{}).Create(&item).Error; err != nil {
+		return 0, err
+	}
+	return item.ID, nil
 }
 
 func (r *ItemRepository) GetItemById(itemID int) (model.Item, error) {

@@ -1179,7 +1179,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Item created successfully",
+                        "description": "ItemID",
                         "schema": {
                             "type": "string"
                         }
