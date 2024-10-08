@@ -32,10 +32,10 @@ func (s *CartService) GetCart(buyerID string) (model.CartOutput, error) {
 	cartOutput := model.CartOutput{}
 	cartOutput.BuyerID = cart.BuyerID
 	for _, cartItem := range cart.CartItems {
-		itemInfo, _ := s.itemRepo.GetItemById(cartItem.ID)
+		itemInfo, _ := s.itemRepo.GetItemById(cartItem.ItemID)
 
 		cartOutput.Items = append(cartOutput.Items, model.CartItemInfo{
-			ID:       cartItem.ID,
+			ID:       itemInfo.ID,
 			Name:     itemInfo.Name,
 			Price:    itemInfo.Price,
 			Quantity: itemInfo.Quantity,

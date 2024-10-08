@@ -132,10 +132,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			cart.DELETE("", h.RemoveFromCart)
 		}
 
-		favoritest := buyer.Group("/favorites")
+		favorites := buyer.Group("/favorites")
 		{
-			favoritest.POST("", h.AddToFavorites)
-			favoritest.DELETE("", h.RemoveFromFavorites)
+			favorites.POST("", h.AddToFavorites)
+			favorites.DELETE("", h.RemoveFromFavorites)
 		}
 
 		buyer.POST("/review", h.CreateReview)
