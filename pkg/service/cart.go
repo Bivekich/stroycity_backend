@@ -38,7 +38,7 @@ func (s *CartService) GetCart(buyerID string) (model.CartOutput, error) {
 			ID:       itemInfo.ID,
 			Name:     itemInfo.Name,
 			Price:    itemInfo.Price,
-			Quantity: itemInfo.Quantity,
+			Quantity: cartItem.Quantity,
 		})
 	}
 	return cartOutput, nil
