@@ -54,10 +54,10 @@ func (r *ItemRepository) GetItems(brandIDs, sellerIDs, categoryIDs, materialIDs 
 	}
 
 	if minPrice > 0 {
-		query = query.Where("price >= ?", minPrice)
+		query = query.Where("price_with_discount >= ?", minPrice)
 	}
 	if maxPrice > 0 {
-		query = query.Where("price <= ?", maxPrice)
+		query = query.Where("price_with_discount <= ?", maxPrice)
 	}
 
 	err := query.Find(&items).Error

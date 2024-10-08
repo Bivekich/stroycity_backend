@@ -51,7 +51,7 @@ func (s *OrderService) CreateOrder(buyerID string) error {
 		orderItem := model.OrderItem{
 			ItemID:    cartItem.ItemID,
 			Quantity:  cartItem.Quantity,
-			UnitPrice: item.Price,
+			UnitPrice: item.PriceWithDiscount,
 			Total:     item.Price * float64(cartItem.Quantity),
 			SellerId:  item.SellerID,
 		}
