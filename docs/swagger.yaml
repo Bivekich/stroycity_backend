@@ -824,6 +824,194 @@ paths:
       summary: Update buyer information
       tags:
       - Buyers
+  /buyer/cart:
+    delete:
+      description: Removes a specified item from the buyer's cart by cart item ID.
+        Only accessible by buyers.
+      parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Cart Item ID
+        in: query
+        name: cart_item_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Item removed from cart
+          schema:
+            type: string
+        "400":
+          description: Invalid cart item ID
+          schema:
+            type: string
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Remove an item from the cart
+      tags:
+      - cart
+    get:
+      description: Retrieves the contents of the buyer's cart. Only accessible by
+        buyers.
+      parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Cart items
+          schema:
+            items:
+              $ref: '#/definitions/model.CartOutput'
+            type: array
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Get cart contents
+      tags:
+      - cart
+    post:
+      consumes:
+      - application/json
+      description: Adds a specified item with a specified quantity to the buyer's
+        cart. Only accessible by buyers.
+      parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Item ID and Quantity
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.AddToCartInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Item added to cart
+          schema:
+            type: string
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Add an item to cart
+      tags:
+      - cart
+  /buyer/favorites:
+    delete:
+      consumes:
+      - application/json
+      description: Remove a specific item from the buyer's favorites
+      parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Item ID
+        in: query
+        name: item_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Item removed from favorites
+          schema:
+            type: string
+        "400":
+          description: Invalid item ID
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Item not found in favorites
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to remove item from favorites
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Remove item from favorites
+      tags:
+      - Favorites
+    post:
+      consumes:
+      - application/json
+      description: Add a specific item to the buyer's favorites
+      parameters:
+      - description: Bearer {JWT}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Item ID
+        in: query
+        name: item_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Item added to favorites
+          schema:
+            type: string
+        "400":
+          description: Invalid item ID
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "403":
+          description: You are not authorized to access this resource
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "404":
+          description: Item not found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Failed to add item to favorites
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Add item to favorites
+      tags:
+      - Favorites
   /buyer/order:
     get:
       description: Retrieve an order by its ID for the buyer
@@ -933,113 +1121,6 @@ paths:
       summary: Создание нового отзыва
       tags:
       - reviews
-  /cart:
-    get:
-      description: Retrieves the contents of the buyer's cart. Only accessible by
-        buyers.
-      parameters:
-      - description: Bearer {JWT}
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Cart items
-          schema:
-            items:
-              $ref: '#/definitions/model.CartOutput'
-            type: array
-        "403":
-          description: You are not authorized to access this resource
-          schema:
-            type: string
-        "500":
-          description: Internal server error
-          schema:
-            type: string
-      summary: Get cart contents
-      tags:
-      - cart
-  /cart/add:
-    post:
-      consumes:
-      - application/json
-      description: Adds a specified item with a specified quantity to the buyer's
-        cart. Only accessible by buyers.
-      parameters:
-      - description: Bearer {JWT}
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Item ID and Quantity
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/model.AddToCartInput'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Item added to cart
-          schema:
-            type: string
-        "400":
-          description: Invalid input
-          schema:
-            type: string
-        "403":
-          description: You are not authorized to access this resource
-          schema:
-            type: string
-        "500":
-          description: Internal server error
-          schema:
-            type: string
-      summary: Add an item to cart
-      tags:
-      - cart
-  /cart/remove:
-    delete:
-      description: Removes a specified item from the buyer's cart by cart item ID.
-        Only accessible by buyers.
-      parameters:
-      - description: Bearer {JWT}
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Cart Item ID
-        in: query
-        name: cart_item_id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Item removed from cart
-          schema:
-            type: string
-        "400":
-          description: Invalid cart item ID
-          schema:
-            type: string
-        "403":
-          description: You are not authorized to access this resource
-          schema:
-            type: string
-        "500":
-          description: Internal server error
-          schema:
-            type: string
-      summary: Remove an item from the cart
-      tags:
-      - cart
   /category:
     get:
       description: Retrieve a list of all categories

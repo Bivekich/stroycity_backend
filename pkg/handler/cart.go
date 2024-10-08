@@ -18,7 +18,7 @@ import (
 // @Failure      400  {string}  string  "Invalid input"
 // @Failure      403  {string}  string  "You are not authorized to access this resource"
 // @Failure      500  {string}  string  "Internal server error"
-// @Router       /cart/add [post]
+// @Router       /buyer/cart [post]
 func (h *Handler) AddToCart(c *gin.Context) {
 	buyerID := c.GetString("user_id")
 
@@ -56,7 +56,7 @@ func (h *Handler) AddToCart(c *gin.Context) {
 // @Success      200  {array}  model.CartOutput  "Cart items"
 // @Failure      403  {string}  string  "You are not authorized to access this resource"
 // @Failure      500  {string}  string  "Internal server error"
-// @Router       /cart [get]
+// @Router       /buyer/cart [get]
 func (h *Handler) GetCart(c *gin.Context) {
 	buyerID := c.GetString("user_id")
 
@@ -86,7 +86,7 @@ func (h *Handler) GetCart(c *gin.Context) {
 // @Failure      400  {string}  string  "Invalid cart item ID"
 // @Failure      403  {string}  string  "You are not authorized to access this resource"
 // @Failure      500  {string}  string  "Internal server error"
-// @Router       /cart/remove [delete]
+// @Router       /buyer/cart [delete]
 func (h *Handler) RemoveFromCart(c *gin.Context) {
 	if role := c.GetString("role"); role != "buyer" {
 		newErrorResponse(c, http.StatusForbidden, "You are not authorized to access this resource") // 403 Forbidden

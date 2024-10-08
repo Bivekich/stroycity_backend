@@ -89,6 +89,14 @@ func (s *BuyerService) BuyerSignIn(mail, password string) (model.BuyerSignInResp
 	return signInResponse, err
 }
 
+func (s *BuyerService) AddToFavorites(buyerID string, itemID int) error {
+	return s.repo.AddToFavorites(buyerID, itemID)
+}
+
+func (s *BuyerService) RemoveFromFavorites(buyerID string, itemID int) error {
+	return s.repo.RemoveFromFavorites(buyerID, itemID)
+}
+
 func (s *BuyerService) orderToOrderOutput(order model.Order) model.OrderOutput {
 	orderOutput := model.OrderOutput{}
 	orderOutput.Total = order.Total

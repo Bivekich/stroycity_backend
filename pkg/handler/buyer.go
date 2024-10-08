@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 	"stroycity/pkg/model"
 )
 
@@ -128,4 +129,84 @@ func (h *Handler) BuyerSignIn(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, buyer) // 200 OK
+}
+
+// AddToFavorites добавляет товар в избранное покупателя
+// @Summary Add item to favorites
+// @Description Add a specific item to the buyer's favorites
+// @Tags Favorites
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Bearer {JWT}"
+// @Param item_id query int true "Item ID"
+// @Success 200 {string} string "Item added to favorites"
+// @Failure 400 {object} ErrorResponse "Invalid item ID"
+// @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"
+// @Failure 404 {object} ErrorResponse "Item not found"
+// @Failure 500 {object} ErrorResponse "Failed to add item to favorites"
+// @Router /buyer/favorites [post]
+func (h *Handler) AddToFavorites(c *gin.Context) {
+	buyerID := c.GetString("user_id")
+
+	// Проверка роли пользователя, чтобы убедиться, что это покупатель
+	if role := c.GetString("role"); role != "buyer" {
+		newErrorResponse(c, http.StatusForbidden, "You are not authorized to access this resource")
+		return
+	}
+
+	itemIDStr := c.Query("item_id")
+	itemID, err := strconv.Atoi(itemIDStr)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "Invalid item ID")
+		return
+	}
+
+	// Добавление товара в избранное через сервис
+	err = h.services.AddToFavorites(buyerID, itemID)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, "Item added to favorites")
+}
+
+// RemoveFromFavorites удаляет товар из избранного покупателя
+// @Summary Remove item from favorites
+// @Description Remove a specific item from the buyer's favorites
+// @Tags Favorites
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Bearer {JWT}"
+// @Param item_id query int true "Item ID"
+// @Success 200 {string} string "Item removed from favorites"
+// @Failure 400 {object} ErrorResponse "Invalid item ID"
+// @Failure 403 {object} ErrorResponse "You are not authorized to access this resource"
+// @Failure 404 {object} ErrorResponse "Item not found in favorites"
+// @Failure 500 {object} ErrorResponse "Failed to remove item from favorites"
+// @Router /buyer/favorites [delete]
+func (h *Handler) RemoveFromFavorites(c *gin.Context) {
+	buyerID := c.GetString("user_id")
+
+	// Проверка роли пользователя, чтобы убедиться, что это покупатель
+	if role := c.GetString("role"); role != "buyer" {
+		newErrorResponse(c, http.StatusForbidden, "You are not authorized to access this resource")
+		return
+	}
+
+	itemIDStr := c.Query("item_id")
+	itemID, err := strconv.Atoi(itemIDStr)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "Invalid item ID")
+		return
+	}
+
+	// Удаление товара из избранного через сервис
+	err = h.services.RemoveFromFavorites(buyerID, itemID)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, "Item removed from favorites")
 }

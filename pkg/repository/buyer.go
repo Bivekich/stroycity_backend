@@ -42,3 +42,31 @@ func (r *BuyerRepository) BuyerSignIn(mail, password string) (model.Buyer, error
 
 	return buyer, nil
 }
+
+func (r *BuyerRepository) AddToFavorites(buyerID string, itemID int) error {
+	var buyer model.Buyer
+	if err := r.db.Preload("Favorites").First(&buyer, "id = ?", buyerID).Error; err != nil {
+		return err
+	}
+
+	// Проверка, что товара нет в избранном
+	for _, item := range buyer.Favorites {
+		if item.ID == itemID {
+			return nil // Товар уже в избранном
+		}
+	}
+
+	// Добавляем товар в избранное
+	return r.db.Model(&buyer).Association("Favorites").Append(&model.Item{ID: itemID})
+}
+
+// RemoveFromFavorites удаляет товар из избранного покупателя
+func (r *BuyerRepository) RemoveFromFavorites(buyerID string, itemID int) error {
+	var buyer model.Buyer
+	if err := r.db.Preload("Favorites").First(&buyer, "id = ?", buyerID).Error; err != nil {
+		return err
+	}
+
+	// Удаляем товар из избранного
+	return r.db.Model(&buyer).Association("Favorites").Delete(&model.Item{ID: itemID})
+}

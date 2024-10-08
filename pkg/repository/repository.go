@@ -73,6 +73,8 @@ type Buyer interface {
 	GetBuyer(id string) (model.Buyer, error)
 	UpdateBuyer(buyer model.Buyer) error
 	BuyerSignIn(mail, password string) (model.Buyer, error)
+	AddToFavorites(buyerID string, itemID int) error
+	RemoveFromFavorites(buyerID string, itemID int) error
 }
 
 type Order interface {
