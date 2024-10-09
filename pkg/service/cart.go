@@ -15,6 +15,19 @@ func NewCartService(repo repository.Cart, itemRepo repository.Item) *CartService
 }
 
 func (s *CartService) AddToCart(buyerID string, itemID int, quantity int) error {
+	usersCart, err := s.repo.GetCartByBuyerID(buyerID)
+	if err != nil {
+		return err
+	}
+	for _, cartItem := range usersCart.CartItems {
+		if cartItem.ItemID == itemID {
+			err = s.UpdateCartItem(cartItem.ID, quantity)
+			if err != nil {
+				return err
+			}
+			return nil
+		}
+	}
 	cartItem := model.CartItem{
 		BuyerID:  buyerID,
 		ItemID:   itemID,

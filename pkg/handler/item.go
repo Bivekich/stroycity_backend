@@ -161,7 +161,7 @@ func (h *Handler) GetItemList(c *gin.Context) {
 	}
 
 	// Получение товаров с фильтрами
-	items, err := h.services.GetItems(filters.BrandIDs, filters.SellerIDs, filters.CategoryIDs, filters.MaterialIDs, filters.MinPrice, filters.MaxPrice)
+	items, err := h.services.GetItems(filters.BrandIDs, filters.SellerIDs, filters.CategoryIDs, filters.MaterialIDs, filters.MinPrice, filters.MaxPrice, filters.Query)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, "Filtering error: "+err.Error()) // 500 Internal Server Error
 		return

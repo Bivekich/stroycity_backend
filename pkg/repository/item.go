@@ -32,35 +32,38 @@ func (r *ItemRepository) UpdateItem(item model.Item) error {
 	return r.db.Save(&item).Error
 }
 
-func (r *ItemRepository) GetItems(brandIDs, sellerIDs, categoryIDs, materialIDs []uint, minPrice, maxPrice float64) ([]model.Item, error) {
+func (r *ItemRepository) GetItems(brandIDs, sellerIDs, categoryIDs, materialIDs []uint, minPrice, maxPrice float64, query string) ([]model.Item, error) {
 	var items []model.Item
 
-	query := r.db.Model(&model.Item{}).Preload("Brand").Preload("Seller").Preload("Category").Preload("Material").Preload("Images")
+	params := r.db.Model(&model.Item{}).Preload("Brand").Preload("Seller").Preload("Category").Preload("Material").Preload("Images")
 
 	if len(brandIDs) > 0 {
-		query = query.Where("brand_id IN ?", brandIDs)
+		params = params.Where("brand_id IN ?", brandIDs)
 	}
 
 	if len(sellerIDs) > 0 {
-		query = query.Where("seller_id IN ?", sellerIDs)
+		params = params.Where("seller_id IN ?", sellerIDs)
 	}
 
 	if len(categoryIDs) > 0 {
-		query = query.Where("category_id IN ?", categoryIDs)
+		params = params.Where("category_id IN ?", categoryIDs)
 	}
 
 	if len(materialIDs) > 0 {
-		query = query.Where("material_id IN ?", materialIDs)
+		params = params.Where("material_id IN ?", materialIDs)
 	}
 
 	if minPrice > 0 {
-		query = query.Where("price_with_discount >= ?", minPrice)
+		params = params.Where("price_with_discount >= ?", minPrice)
 	}
 	if maxPrice > 0 {
-		query = query.Where("price_with_discount <= ?", maxPrice)
+		params = params.Where("price_with_discount <= ?", maxPrice)
+	}
+	if len(query) > 0 {
+		params = params.Where("name ILIKE ?", "%"+query+"%")
 	}
 
-	err := query.Find(&items).Error
+	err := params.Find(&items).Error
 	if err != nil {
 		return nil, err
 	}

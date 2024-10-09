@@ -55,8 +55,8 @@ func (s *ItemService) UpdateItem(item model.Item) error {
 	return s.repo.UpdateItem(item)
 }
 
-func (s *ItemService) GetItems(brandIDs, sellerIDs, categoryIDs, materialIDs []uint, minPrice, maxPrice float64) ([]model.ItemInfo, error) {
-	items, err := s.repo.GetItems(brandIDs, sellerIDs, categoryIDs, materialIDs, minPrice, maxPrice)
+func (s *ItemService) GetItems(brandIDs, sellerIDs, categoryIDs, materialIDs []uint, minPrice, maxPrice float64, query string) ([]model.ItemInfo, error) {
+	items, err := s.repo.GetItems(brandIDs, sellerIDs, categoryIDs, materialIDs, minPrice, maxPrice, query)
 	if err != nil {
 		return nil, err
 	}

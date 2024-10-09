@@ -7,4 +7,5 @@ type FilterRequest struct {
 	MaterialIDs []uint  `json:"materials"`
 	MinPrice    float64 `json:"min_price"`
 	MaxPrice    float64 `json:"max_price"`
+	Query       string  `json:"query"`
 }
