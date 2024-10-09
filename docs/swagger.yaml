@@ -196,6 +196,8 @@ definitions:
         type: number
       min_price:
         type: number
+      query:
+        type: string
       sellers:
         items:
           type: integer

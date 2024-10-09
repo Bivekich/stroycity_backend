@@ -2039,6 +2039,9 @@ const docTemplate = `{
                 "min_price": {
                     "type": "number"
                 },
+                "query": {
+                    "type": "string"
+                },
                 "sellers": {
                     "type": "array",
                     "items": {
