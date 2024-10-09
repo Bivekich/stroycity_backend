@@ -76,7 +76,10 @@ func (s *CartService) RemoveFromCart(userID string, itemID int) error {
 	}
 	for _, cartItem := range cart.CartItems {
 		if cartItem.ItemID == itemID {
-			s.repo.RemoveFromCart(itemID)
+			err = s.repo.RemoveFromCart(cartItem.ID)
+			if err != nil {
+				return err
+			}
 			return nil
 		}
 	}
