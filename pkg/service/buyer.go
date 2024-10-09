@@ -20,7 +20,7 @@ func (s *BuyerService) BuyerSignUp(buyerInput model.BuyerInput) error {
 		ID:       uuid.Must(uuid.NewV4()).String(),
 		Name:     buyerInput.Name,
 		Email:    buyerInput.Email,
-		Password: buyerInput.Password,
+		Password: GeneratePasswordHash(buyerInput.Password),
 	}
 	return s.repo.BuyerSignUp(buyer)
 }
