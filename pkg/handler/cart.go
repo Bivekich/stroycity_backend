@@ -88,19 +88,21 @@ func (h *Handler) GetCart(c *gin.Context) {
 // @Failure      500  {string}  string  "Internal server error"
 // @Router       /buyer/cart [delete]
 func (h *Handler) RemoveFromCart(c *gin.Context) {
+	buyerID := c.GetString("user_id")
+
 	if role := c.GetString("role"); role != "buyer" {
 		newErrorResponse(c, http.StatusForbidden, "You are not authorized to access this resource") // 403 Forbidden
 		return
 	}
 
-	cartItemIDStr := c.Query("cart_item_id")
-	cartItemID, err := strconv.Atoi(cartItemIDStr)
+	itemIDStr := c.Query("cart_item_id")
+	itemID, err := strconv.Atoi(itemIDStr)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, "Invalid cart item ID") // 400 Bad Request
 		return
 	}
 
-	err = h.services.RemoveFromCart(cartItemID)
+	err = h.services.RemoveFromCart(buyerID, itemID)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error()) // 500 Internal Server Error
 		return

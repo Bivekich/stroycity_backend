@@ -93,7 +93,7 @@ type Cart interface {
 	AddToCart(buyerID string, itemID int, quantity int) error
 	GetCart(buyerID string) (model.CartOutput, error)
 	UpdateCartItem(cartItemID int, quantity int) error
-	RemoveFromCart(cartItemID int) error
+	RemoveFromCart(userID string, itemID int) error
 }
 
 type Review interface {

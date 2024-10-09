@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"stroycity/pkg/model"
 	"stroycity/pkg/repository"
 )
@@ -68,6 +69,16 @@ func (s *CartService) UpdateCartItem(cartItemID int, quantity int) error {
 	return s.repo.UpdateCartItem(cartItem)
 }
 
-func (s *CartService) RemoveFromCart(cartItemID int) error {
-	return s.repo.RemoveFromCart(cartItemID)
+func (s *CartService) RemoveFromCart(userID string, itemID int) error {
+	cart, err := s.repo.GetCartByBuyerID(userID)
+	if err != nil {
+		return err
+	}
+	for _, cartItem := range cart.CartItems {
+		if cartItem.ItemID == itemID {
+			s.repo.RemoveFromCart(itemID)
+			return nil
+		}
+	}
+	return errors.New("Item not found")
 }
