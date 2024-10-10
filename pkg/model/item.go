@@ -41,11 +41,12 @@ type ItemInput struct {
 	MaterialID        int     `json:"material_id"`
 }
 type ItemInfo struct {
-	ID          int      `json:"id"`
-	Name        string   `json:"name"`
-	Description string   `json:"description"`
-	Price       float64  `json:"price"`
-	Images      []string `json:"images"`
+	ID                int      `json:"id"`
+	Name              string   `json:"name"`
+	Description       string   `json:"description"`
+	Price             float64  `json:"price"`
+	PriceWithDiscount float64  `json:"price_with_discount"`
+	Images            []string `json:"images"`
 }
 
 type CurrentItemInfo struct {
@@ -73,10 +74,11 @@ func ConvertItemsToItemInfo(items []Item) []ItemInfo {
 
 	for _, item := range items {
 		itemInfo := ItemInfo{
-			ID:          item.ID,
-			Name:        item.Name,
-			Description: item.Description,
-			Price:       item.Price,
+			ID:                item.ID,
+			Name:              item.Name,
+			Description:       item.Description,
+			Price:             item.Price,
+			PriceWithDiscount: item.PriceWithDiscount,
 		}
 		for _, image := range item.Images {
 			itemInfo.Images = append(itemInfo.Images, image.URL)
