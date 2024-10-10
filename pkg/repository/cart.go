@@ -24,7 +24,8 @@ func (r *CartRepository) GetCartByBuyerID(buyerID string) (model.Cart, error) {
 }
 
 func (r *CartRepository) UpdateCartItem(cartItem model.CartItem) error {
-	return r.db.Model(&model.CartItem{}).Save(&cartItem).Error
+	err := r.db.Model(&model.CartItem{}).Where("item_id = ?", cartItem).Updates(&cartItem).Error
+	return err
 }
 
 func (r *CartRepository) GetCartItemByID(cartItemID int) (model.CartItem, error) {
