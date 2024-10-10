@@ -59,14 +59,7 @@ func (s *CartService) GetCart(buyerID string) (model.CartOutput, error) {
 }
 
 func (s *CartService) UpdateCartItem(cartItemID int, quantity int) error {
-	cartItem, err := s.repo.GetCartItemByID(cartItemID)
-	if err != nil {
-		return err
-	}
-
-	cartItem.Quantity = quantity
-
-	return s.repo.UpdateCartItem(cartItem)
+	return s.repo.UpdateCartItem(cartItemID, quantity)
 }
 
 func (s *CartService) RemoveFromCart(userID string, itemID int) error {
