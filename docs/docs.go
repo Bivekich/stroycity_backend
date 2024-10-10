@@ -2161,6 +2161,9 @@ const docTemplate = `{
                 },
                 "price": {
                     "type": "number"
+                },
+                "price_with_discount": {
+                    "type": "number"
                 }
             }
         },
