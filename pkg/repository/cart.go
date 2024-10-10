@@ -23,7 +23,7 @@ func (r *CartRepository) GetCartByBuyerID(buyerID string) (model.Cart, error) {
 	return cart, err
 }
 
-func (r *CartRepository) UpdateCartItem(cartItemID int, quantity string) error {
+func (r *CartRepository) UpdateCartItem(cartItemID, quantity int) error {
 	err := r.db.Model(&model.CartItem{}).Where("id = ?", cartItemID).Update("quantity", quantity).Error
 	return err
 }

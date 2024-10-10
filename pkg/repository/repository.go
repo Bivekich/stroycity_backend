@@ -90,7 +90,7 @@ type Admin interface {
 type Cart interface {
 	AddToCart(cartItem model.CartItem) error
 	GetCartByBuyerID(buyerID string) (model.Cart, error)
-	UpdateCartItem(cartItemID int, quantity string) error
+	UpdateCartItem(cartItemID, quantity int) error
 	GetCartItemByID(cartItemID int) (model.CartItem, error)
 	RemoveFromCart(cartItemID int) error
 	ClearCart(buyerID string) error
