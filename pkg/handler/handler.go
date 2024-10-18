@@ -36,6 +36,14 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	//UPLOADS
 	////////////////////////////////////////////////////////////
+	// @Summary Serve static files
+	// @Description This endpoint serves static files from the /files directory.
+	// @Tags Files
+	// @Produce application/octet-stream
+	// @Param file path string true "The name of the file to download"
+	// @Success 200 {file} file "Successfully retrieved file"
+	// @Failure 404 {object} gin.H "File Not Found"
+	// @Router /uploads/{file} [get]
 	router.Static("/uploads", "./uploads")
 	////////////////////////////////////////////////////////////
 
